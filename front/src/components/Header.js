@@ -1,9 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Header = () => (
   <nav className="navbar navbar-light">
     <div className="container">
-      <a className="navbar-brand" href="index.html">conduit</a>
+      <Link to="/" className="navbar-brand">conduit</Link>
       <ul className="nav navbar-nav pull-xs-right">
         <li className="nav-item">
 
