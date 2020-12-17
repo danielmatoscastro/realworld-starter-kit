@@ -1,6 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import {
+  HOME,
+  EDITOR,
+  SETTINGS,
+  PROFILE_F,
+  LOGIN,
+  REGISTER,
+} from '../routes';
 import useUser from '../hooks/useUser';
 
 const HeaderLink = ({
@@ -28,40 +36,40 @@ const Header = () => {
   return (
     <nav className="navbar navbar-light">
       <div className="container">
-        <Link to="/" className="navbar-brand">conduit</Link>
+        <Link to={HOME} className="navbar-brand">conduit</Link>
         <ul className="nav navbar-nav pull-xs-right">
 
           <li className="nav-item">
-            <Link to="/" className="nav-link active">Home</Link>
+            <Link to={HOME} className="nav-link active">Home</Link>
           </li>
 
           {[{
             show: user.isLogged,
-            route: '/editor',
+            route: EDITOR,
             icon: 'ion-compose',
             text: 'New Post',
           },
           {
             show: user.isLogged,
-            route: '/settings',
+            route: SETTINGS,
             icon: 'ion-gear-a',
             text: 'Settings',
           },
           {
             show: user.isLogged,
-            route: `/profile/${user.id}`,
+            route: PROFILE_F(user.id),
             icon: '',
             text: user.username,
           },
           {
             show: !user.isLogged,
-            route: '/login',
+            route: LOGIN,
             icon: '',
             text: 'Sign in',
           },
           {
             show: !user.isLogged,
-            route: '/register',
+            route: REGISTER,
             icon: '',
             text: 'Sign up',
           },

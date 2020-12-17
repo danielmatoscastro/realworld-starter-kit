@@ -2,6 +2,17 @@ import React from 'react';
 import {
   BrowserRouter as Router, Switch, Route,
 } from 'react-router-dom';
+import {
+  LOGIN,
+  REGISTER,
+  SETTINGS,
+  EDITOR,
+  EDITOR_SLUG,
+  ARTICLE_SLUG,
+  PROFILE_SLUG,
+  FAVORITES_SLUG,
+  HOME,
+} from './routes';
 import UserProvider from './providers/UserProvider';
 import Home from './pages/Home';
 import LoginRegister from './pages/LoginRegister';
@@ -15,22 +26,22 @@ function App() {
     <UserProvider>
       <Router>
         <Switch>
-          <Route path={['/login', '/register']}>
+          <Route path={[LOGIN, REGISTER]}>
             <LoginRegister />
           </Route>
-          <Route path="/settings">
+          <Route path={SETTINGS}>
             <Settings />
           </Route>
-          <Route path={['/editor', '/editor/:slug']}>
+          <Route path={[EDITOR, EDITOR_SLUG]}>
             <CreateEditArticle />
           </Route>
-          <Route path="/article/:slug">
+          <Route path={ARTICLE_SLUG}>
             <Article />
           </Route>
-          <Route path={['/profile/:slug', '/profile/:slug/favorites']}>
+          <Route path={[PROFILE_SLUG, FAVORITES_SLUG]}>
             <Profile />
           </Route>
-          <Route path="/" exact>
+          <Route path={HOME} exact>
             <Home />
           </Route>
         </Switch>
