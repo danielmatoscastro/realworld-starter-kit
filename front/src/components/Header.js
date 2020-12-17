@@ -1,6 +1,26 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import useUser from '../hooks/useUser';
+
+const HeaderLink = ({
+  linkData: {
+    show, route, icon, text,
+  },
+}) => (
+  show && (
+    <li className="nav-item">
+      <Link to={route} className="nav-link">
+        <i className={icon} />
+        {` ${text}`}
+      </Link>
+    </li>
+  )
+);
+
+HeaderLink.propTypes = {
+  linkData: PropTypes.shape().isRequired,
+};
 
 const Header = () => {
   const { user } = useUser();
@@ -15,43 +35,37 @@ const Header = () => {
             <Link to="/" className="nav-link active">Home</Link>
           </li>
 
-          {user.isLogged && (
-          <li className="nav-item">
-            <Link to="/editor" className="nav-link">
-              <i className="ion-compose" />
-&nbsp;New Post
-            </Link>
-          </li>
-          )}
-
-          {user.isLogged && (
-          <li className="nav-item">
-            <Link to="/settings" className="nav-link">
-              <i className="ion-gear-a" />
-&nbsp;Settings
-            </Link>
-          </li>
-          )}
-
-          {user.isLogged && (
-          <li className="nav-item">
-            <Link to={`/profile/${user.id}`} className="nav-link">
-              {user.username}
-            </Link>
-          </li>
-          )}
-
-          {!user.isLogged && (
-          <li className="nav-item">
-            <Link to="/login" className="nav-link">Sign in</Link>
-          </li>
-          )}
-
-          {!user.isLogged && (
-          <li className="nav-item">
-            <Link to="/register" className="nav-link">Sign up</Link>
-          </li>
-          )}
+          {[{
+            show: user.isLogged,
+            route: '/editor',
+            icon: 'ion-compose',
+            text: 'New Post',
+          },
+          {
+            show: user.isLogged,
+            route: '/settings',
+            icon: 'ion-gear-a',
+            text: 'Settings',
+          },
+          {
+            show: user.isLogged,
+            route: `/profile/${user.id}`,
+            icon: '',
+            text: user.username,
+          },
+          {
+            show: !user.isLogged,
+            route: '/login',
+            icon: '',
+            text: 'Sign in',
+          },
+          {
+            show: !user.isLogged,
+            route: '/register',
+            icon: '',
+            text: 'Sign up',
+          },
+          ].map((props) => <HeaderLink linkData={props} key={props.text} />)}
 
         </ul>
       </div>
