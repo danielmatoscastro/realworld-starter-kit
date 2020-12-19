@@ -1,12 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import useUser from '../hooks/useUser';
-import DefaultPage from '../components/DefaultPage';
 import { HOME } from '../routes';
+import DefaultPage from '../components/DefaultPage';
+import CardArticle from '../components/CardArticle';
+import Pagination from '../components/Pagination';
+import Tags from '../components/Tags';
+
+const ARTICLES_PER_PAGE = 10;
+const BASE_URL = 'https://conduit.productionready.io/api';
 
 const Home = () => {
-  const [globalFeedActive, setGlobalFeedActive] = useState(true);
   const { user } = useUser();
+  const [globalFeedActive, setGlobalFeedActive] = useState(true);
+  const [articles, setArticles] = useState([]);
+  const [articlesCount, setArticlesCount] = useState(0);
+  const [activePage, setActivePage] = useState(1);
+  const [tags, setTags] = useState([]);
+  const [currentTag, setCurrentTag] = useState(null);
+
+  useEffect(async () => {
+    if (globalFeedActive) {
+      const url = new URL(`${BASE_URL}/articles`);
+      url.search = new URLSearchParams({
+        limit: ARTICLES_PER_PAGE,
+        offset: (activePage - 1) * ARTICLES_PER_PAGE,
+      });
+
+      if (currentTag) {
+        url.searchParams.append('tag', currentTag);
+      }
+
+      const response = await fetch(url);
+      const data = await response.json();
+      setArticles(data.articles);
+      setArticlesCount(data.articlesCount);
+    }
+  }, [globalFeedActive, activePage, currentTag]);
+
+  useEffect(async () => {
+    const url = new URL(`${BASE_URL}/tags`);
+    const response = await fetch(url);
+    const data = await response.json();
+    setTags(data.tags);
+  }, []);
 
   return (
     <DefaultPage>
@@ -30,8 +67,11 @@ const Home = () => {
                     <NavLink
                       className="nav-link"
                       to={HOME}
-                      isActive={() => !globalFeedActive}
-                      onClick={() => setGlobalFeedActive(false)}
+                      isActive={() => !currentTag && !globalFeedActive}
+                      onClick={() => {
+                        setGlobalFeedActive(false);
+                        setCurrentTag(null);
+                      }}
                     >
                       Your Feed
                     </NavLink>
@@ -41,73 +81,51 @@ const Home = () => {
                     <NavLink
                       className="nav-link"
                       to={HOME}
-                      isActive={() => globalFeedActive}
-                      onClick={() => setGlobalFeedActive(true)}
+                      isActive={() => !currentTag && globalFeedActive}
+                      onClick={() => {
+                        setGlobalFeedActive(true);
+                        setCurrentTag(null);
+                      }}
                     >
                       Global Feed
                     </NavLink>
                   </li>
+
+                  <li className="nav-item">
+                    {currentTag && (
+                    <NavLink
+                      className="nav-link"
+                      to={HOME}
+                      onClick={(e) => e.preventDefault()}
+                    >
+                      {`# ${currentTag}`}
+                    </NavLink>
+                    )}
+                  </li>
                 </ul>
               </div>
 
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="profile.html"><img src="http://i.imgur.com/Qr71crq.jpg" alt="profile" /></a>
-                  <div className="info">
-                    <a href="/" className="author">Eric Simons</a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button type="button" className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart" />
-                    {' '}
-                    29
-                  </button>
-                </div>
-                <a href="/" className="preview-link">
-                  <h1>How to build webapps that scale</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
+              {articles.map(((article) => (
+                <CardArticle
+                  author={article.author}
+                  createdAt={article.createdAt}
+                  favoritesCount={article.favoritesCount}
+                  slug={article.slug}
+                  title={article.title}
+                  description={article.description}
+                  key={article.slug}
+                />
+              )))}
 
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="profile.html"><img src="http://i.imgur.com/N4VcUeJ.jpg" alt="profile" /></a>
-                  <div className="info">
-                    <a href="/" className="author">Albert Pai</a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button type="button" className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart" />
-                    {' '}
-                    32
-                  </button>
-                </div>
-                <a href="/" className="preview-link">
-                  <h1>The song you won&apos;t ever stop singing. No matter how hard you try.</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
+              <Pagination
+                pages={Math.ceil(articlesCount / ARTICLES_PER_PAGE)}
+                activePage={activePage}
+                onClick={(page) => setActivePage(page)}
+              />
 
             </div>
 
-            <div className="col-md-3">
-              <div className="sidebar">
-                <p>Popular Tags</p>
-
-                <div className="tag-list">
-                  <a href="/" className="tag-pill tag-default">programming</a>
-                  <a href="/" className="tag-pill tag-default">javascript</a>
-                  <a href="/" className="tag-pill tag-default">emberjs</a>
-                  <a href="/" className="tag-pill tag-default">angularjs</a>
-                  <a href="/" className="tag-pill tag-default">react</a>
-                  <a href="/" className="tag-pill tag-default">mean</a>
-                  <a href="/" className="tag-pill tag-default">node</a>
-                  <a href="/" className="tag-pill tag-default">rails</a>
-                </div>
-              </div>
-            </div>
+            <Tags tags={tags} onClick={(tag) => setCurrentTag(tag)} />
 
           </div>
         </div>
