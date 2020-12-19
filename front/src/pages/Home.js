@@ -18,6 +18,7 @@ const Home = () => {
   const [activePage, setActivePage] = useState(1);
   const [tags, setTags] = useState([]);
   const [currentTag, setCurrentTag] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(async () => {
     if (globalFeedActive) {
@@ -30,9 +31,12 @@ const Home = () => {
       if (currentTag) {
         url.searchParams.append('tag', currentTag);
       }
-
+      setLoading(true);
+      setArticles([]);
+      setArticlesCount(0);
       const response = await fetch(url);
       const data = await response.json();
+      setLoading(false);
       setArticles(data.articles);
       setArticlesCount(data.articlesCount);
     }
@@ -104,6 +108,8 @@ const Home = () => {
                   </li>
                 </ul>
               </div>
+
+              {loading && <div style={{ marginTop: '1em' }}>Loading articles...</div>}
 
               {articles.map(((article) => (
                 <CardArticle
