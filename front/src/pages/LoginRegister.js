@@ -3,6 +3,8 @@ import { useRouteMatch, Redirect } from 'react-router-dom';
 import useUser from '../hooks/useUser';
 import { LOGIN, HOME } from '../routes';
 import DefaultPage from '../components/DefaultPage';
+import ErrorList from '../components/ErrorList';
+import Input from '../components/Input';
 
 const BASE_URL = 'https://conduit.productionready.io/api';
 
@@ -12,7 +14,7 @@ const LoginRegister = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+  const [errors, setErrors] = useState(null);
 
   if (user.isLogged) {
     return <Redirect to={HOME} />;
@@ -38,10 +40,10 @@ const LoginRegister = () => {
           isLogged: true,
         });
       } else {
-        setError(data.errors);
+        setErrors(data.errors);
       }
     } catch (err) {
-      setError(err);
+      setErrors(err);
     }
   };
 
@@ -73,50 +75,30 @@ const LoginRegister = () => {
                 <a href="/">Have an account?</a>
               </p>
 
-              {error && (
-              <ul className="error-messages">
-                {
-                  ['username', 'email', 'password'].reduce((acc, field) => {
-                    const errors = error[field] ? error[field].map((message) => {
-                      const messageComplete = `${field} ${message}`;
-                      return (
-                        <li key={messageComplete}>{messageComplete}</li>
-                      );
-                    }) : [];
-                    return acc.concat(errors);
-                  }, [])
-                }
-              </ul>
+              {errors && (
+              <ErrorList
+                errors={errors}
+                possibleErrorFields={['username', 'email', 'password']}
+              />
               )}
 
               <form>
-                <fieldset className="form-group">
-                  <input
-                    className="form-control form-control-lg"
-                    type="text"
-                    placeholder="Your Name"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                  />
-                </fieldset>
-                <fieldset className="form-group">
-                  <input
-                    className="form-control form-control-lg"
-                    type="text"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </fieldset>
-                <fieldset className="form-group">
-                  <input
-                    className="form-control form-control-lg"
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </fieldset>
+                <Input
+                  placeholder="Your Name"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+                <Input
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <Input
+                  placeholder="Password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
                 <button
                   type="button"
                   className="btn btn-lg btn-primary pull-xs-right"
@@ -125,7 +107,6 @@ const LoginRegister = () => {
                   Sign up
                 </button>
               </form>
-
             </div>
             )}
           </div>
