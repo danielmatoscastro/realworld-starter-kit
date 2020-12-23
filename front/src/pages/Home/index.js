@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useUser } from '../../hooks';
-import { HOME } from '../../routes';
 import {
   DefaultPage,
   CardArticle,
   Pagination,
   Tags,
-} from '../../components';
+} from 'components';
+import { useUser } from '../../hooks';
+import { HOME } from '../../routes';
 
 const ARTICLES_PER_PAGE = 10;
 const BASE_URL = 'https://conduit.productionready.io/api';

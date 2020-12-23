@@ -13,13 +13,15 @@ import {
   FAVORITES_SLUG,
   HOME,
 } from './routes';
-import UserProvider from './providers/UserProvider';
-import Home from './pages/Home';
-import LoginRegister from './pages/LoginRegister';
-import Settings from './pages/Settings';
-import CreateEditArticle from './pages/CreateEditArticle';
-import Article from './pages/Article';
-import Profile from './pages/Profile';
+import { UserProvider } from './providers';
+import {
+  Home,
+  LoginRegister,
+  Settings,
+  CreateEditArticle,
+  Article,
+  Profile,
+} from './pages';
 
 function App() {
   return (

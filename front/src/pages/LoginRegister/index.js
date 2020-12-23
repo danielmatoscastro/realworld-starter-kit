@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useRouteMatch, Redirect } from 'react-router-dom';
+import { DefaultPage, ErrorList, Input } from 'components';
 import { useUser } from '../../hooks';
 import { LOGIN, HOME } from '../../routes';
-import { DefaultPage, ErrorList, Input } from '../../components';
 
 const BASE_URL = 'https://conduit.productionready.io/api';
 

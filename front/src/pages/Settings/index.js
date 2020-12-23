@@ -1,5 +1,5 @@
 import React from 'react';
-import { DefaultPage } from '../../components';
+import { DefaultPage } from 'components';
 
 export const Settings = () => (
   <DefaultPage>

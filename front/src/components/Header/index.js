@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { useUser } from 'hooks';
 import {
   HOME,
   EDITOR,
@@ -9,7 +10,6 @@ import {
   LOGIN,
   REGISTER,
 } from '../../routes';
-import { useUser } from '../../hooks';
 
 const HeaderLink = ({
   linkData: {
