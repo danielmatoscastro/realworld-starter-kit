@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const ErrorList = ({ errors, possibleErrorFields }) => (
+export const ErrorList = ({ errors, possibleErrorFields }) => (
   <ul className="error-messages">
     {
         possibleErrorFields.reduce((acc, field) => {

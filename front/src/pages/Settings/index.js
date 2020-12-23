@@ -1,7 +1,7 @@
 import React from 'react';
-import DefaultPage from '../components/DefaultPage';
+import { DefaultPage } from '../../components';
 
-const Settings = () => (
+export const Settings = () => (
   <DefaultPage>
     <div className="settings-page">
       <div className="container page">

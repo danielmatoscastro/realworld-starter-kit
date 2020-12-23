@@ -1,7 +1,7 @@
 import React from 'react';
-import DefaultPage from '../components/DefaultPage';
+import { DefaultPage } from '../../components';
 
-const CreateEditArticle = () => (
+export const CreateEditArticle = () => (
   <DefaultPage>
     <div className="editor-page">
       <div className="container page">

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { PROFILE_F, ARTICLE_F } from '../routes';
+import { PROFILE_F, ARTICLE_F } from '../../routes';
 
-const CardArticle = ({
+export const CardArticle = ({
   author,
   createdAt,
   favoritesCount,

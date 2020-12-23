@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import useUser from '../hooks/useUser';
-import { HOME } from '../routes';
-import DefaultPage from '../components/DefaultPage';
-import CardArticle from '../components/CardArticle';
-import Pagination from '../components/Pagination';
-import Tags from '../components/Tags';
+import { useUser } from '../../hooks';
+import { HOME } from '../../routes';
+import {
+  DefaultPage,
+  CardArticle,
+  Pagination,
+  Tags,
+} from '../../components';
 
 const ARTICLES_PER_PAGE = 10;
 const BASE_URL = 'https://conduit.productionready.io/api';
 
-const Home = () => {
+export const Home = () => {
   const { user } = useUser();
   const [globalFeedActive, setGlobalFeedActive] = useState(true);
   const [articles, setArticles] = useState([]);

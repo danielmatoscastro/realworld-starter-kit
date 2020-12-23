@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { useRouteMatch, Redirect } from 'react-router-dom';
-import useUser from '../hooks/useUser';
-import { LOGIN, HOME } from '../routes';
-import DefaultPage from '../components/DefaultPage';
-import ErrorList from '../components/ErrorList';
-import Input from '../components/Input';
+import { useUser } from '../../hooks';
+import { LOGIN, HOME } from '../../routes';
+import { DefaultPage, ErrorList, Input } from '../../components';
 
 const BASE_URL = 'https://conduit.productionready.io/api';
 
-const LoginRegister = () => {
+export const LoginRegister = () => {
   const { user, setUser } = useUser();
   const isLoginPage = useRouteMatch(LOGIN);
   const [username, setUsername] = useState('');

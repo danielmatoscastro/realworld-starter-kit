@@ -8,8 +8,8 @@ import {
   PROFILE_F,
   LOGIN,
   REGISTER,
-} from '../routes';
-import useUser from '../hooks/useUser';
+} from '../../routes';
+import { useUser } from '../../hooks';
 
 const HeaderLink = ({
   linkData: {
@@ -30,7 +30,7 @@ HeaderLink.propTypes = {
   linkData: PropTypes.shape().isRequired,
 };
 
-const Header = () => {
+export const Header = () => {
   const { user } = useUser();
 
   return (

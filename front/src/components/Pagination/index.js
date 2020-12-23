@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Pagination = ({ pages, activePage, onClick }) => (
+export const Pagination = ({ pages, activePage, onClick }) => (
   <nav>
     <ul className="pagination">
       {

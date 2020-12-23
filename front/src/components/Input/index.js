@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Input = ({
+export const Input = ({
   placeholder, type, value, onChange,
 }) => (
   <fieldset className="form-group">

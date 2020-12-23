@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Footer = () => (
+export const Footer = () => (
   <footer>
     <div className="container">
       <a href="/" className="logo-font">conduit</a>

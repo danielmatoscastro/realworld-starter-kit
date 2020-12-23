@@ -1,7 +1,7 @@
 import React from 'react';
-import DefaultPage from '../components/DefaultPage';
+import { DefaultPage } from '../../components';
 
-const Article = () => (
+export const Article = () => (
   <DefaultPage>
     <div className="article-page">
 

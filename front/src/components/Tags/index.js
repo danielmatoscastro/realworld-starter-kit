@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { HOME } from '../routes';
+import { HOME } from '../../routes';
 
-const Tags = ({ tags, onClick }) => (
+export const Tags = ({ tags, onClick }) => (
   <div className="col-md-3">
     <div className="sidebar">
       <p>Popular Tags</p>
