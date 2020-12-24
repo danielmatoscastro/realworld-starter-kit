@@ -6,11 +6,11 @@ import {
   Pagination,
   Tags,
 } from 'components';
-import { useUser } from '../../hooks';
+import { useUser } from 'hooks';
+import { getRequest, ARTICLES_ROUTE, TAGS_ROUTE } from 'api';
 import { HOME } from '../../routes';
 
 const ARTICLES_PER_PAGE = 10;
-const BASE_URL = 'https://conduit.productionready.io/api';
 
 export const Home = () => {
   const { user } = useUser();
@@ -24,20 +24,20 @@ export const Home = () => {
 
   useEffect(async () => {
     if (globalFeedActive) {
-      const url = new URL(`${BASE_URL}/articles`);
-      url.search = new URLSearchParams({
+      const searchParams = {
         limit: ARTICLES_PER_PAGE,
         offset: (activePage - 1) * ARTICLES_PER_PAGE,
-      });
-
+      };
       if (currentTag) {
-        url.searchParams.append('tag', currentTag);
+        searchParams.tag = currentTag;
       }
+
       setLoading(true);
       setArticles([]);
       setArticlesCount(0);
-      const response = await fetch(url);
-      const data = await response.json();
+
+      const data = await getRequest(ARTICLES_ROUTE, searchParams);
+
       setLoading(false);
       setArticles(data.articles);
       setArticlesCount(data.articlesCount);
@@ -45,9 +45,7 @@ export const Home = () => {
   }, [globalFeedActive, activePage, currentTag]);
 
   useEffect(async () => {
-    const url = new URL(`${BASE_URL}/tags`);
-    const response = await fetch(url);
-    const data = await response.json();
+    const data = await getRequest(TAGS_ROUTE);
     setTags(data.tags);
   }, []);
 

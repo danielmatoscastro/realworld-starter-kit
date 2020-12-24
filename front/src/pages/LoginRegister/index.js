@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useRouteMatch, Redirect } from 'react-router-dom';
 import { DefaultPage, ErrorList, Input } from 'components';
-import { useUser } from '../../hooks';
+import { postRequest, USERS_ROUTE, USERS_LOGIN_ROUTE } from 'api';
+import { useUser } from 'hooks';
 import { LOGIN, HOME } from '../../routes';
-
-const BASE_URL = 'https://conduit.productionready.io/api';
 
 export const LoginRegister = () => {
   const { user, setUser } = useUser();
@@ -18,34 +17,21 @@ export const LoginRegister = () => {
     return <Redirect to={HOME} />;
   }
 
-  const onClickHandler = (routeApi, payload) => async (e) => {
-    e.preventDefault();
+  const onClickHandler = (endpoint, payload) => async (e) => {
     try {
-      const request = await fetch(`${BASE_URL}${routeApi}`, {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
+      e.preventDefault();
+      const data = await postRequest(endpoint, payload);
+      setUser({
+        ...user,
+        ...data.user,
+        isLogged: true,
       });
-
-      const data = await request.json();
-
-      if (request.status === 200) {
-        setUser({
-          ...user,
-          ...data.user,
-          isLogged: true,
-        });
-      } else {
-        setErrors(data.errors);
-      }
     } catch (err) {
-      setErrors(err);
+      setErrors(err.errors);
     }
   };
 
-  const registerHandler = onClickHandler('/users', {
+  const registerHandler = onClickHandler(USERS_ROUTE, {
     user: {
       username,
       password,
@@ -53,7 +39,7 @@ export const LoginRegister = () => {
     },
   });
 
-  const loginHandler = onClickHandler('/users/login', {
+  const loginHandler = onClickHandler(USERS_LOGIN_ROUTE, {
     user: {
       password,
       email,
