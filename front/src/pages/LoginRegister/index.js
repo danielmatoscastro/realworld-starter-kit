@@ -3,7 +3,7 @@ import { useRouteMatch, Redirect, Link } from 'react-router-dom';
 import { DefaultPage, ErrorList, Input } from 'components';
 import { postRequest, USERS_ROUTE, USERS_LOGIN_ROUTE } from 'api';
 import { useUser } from 'hooks';
-import { LOGIN, HOME } from '../../routes';
+import { LOGIN, HOME, REGISTER } from '../../routes';
 
 export const LoginRegister = () => {
   const { user, setUser } = useUser();
@@ -31,20 +31,33 @@ export const LoginRegister = () => {
     }
   };
 
-  const registerHandler = onClickHandler(USERS_ROUTE, {
-    user: {
-      username,
-      password,
-      email,
-    },
-  });
-
-  const loginHandler = onClickHandler(USERS_LOGIN_ROUTE, {
-    user: {
-      password,
-      email,
-    },
-  });
+  let internalProps = {};
+  if (isLoginPage) {
+    internalProps = {
+      title: 'Sign in',
+      link: <Link to={REGISTER}>Need an account?</Link>,
+      messageLink: 'Need an account?',
+      onClickHandler: onClickHandler(USERS_LOGIN_ROUTE, {
+        user: {
+          password,
+          email,
+        },
+      }),
+    };
+  } else {
+    internalProps = {
+      title: 'Sign up',
+      link: <Link to={LOGIN}>Have an account?</Link>,
+      messageLink: 'Have an account?',
+      onClickHandler: onClickHandler(USERS_ROUTE, {
+        user: {
+          username,
+          password,
+          email,
+        },
+      }),
+    };
+  }
 
   return (
     <DefaultPage>
@@ -52,11 +65,10 @@ export const LoginRegister = () => {
         <div className="container page">
           <div className="row">
 
-            {!isLoginPage && (
             <div className="col-md-6 offset-md-3 col-xs-12">
-              <h1 className="text-xs-center">Sign up</h1>
+              <h1 className="text-xs-center">{internalProps.title}</h1>
               <p className="text-xs-center">
-                <Link to={LOGIN}>Have an account?</Link>
+                {internalProps.link}
               </p>
 
               {errors && (
@@ -67,11 +79,13 @@ export const LoginRegister = () => {
               )}
 
               <form>
+                {!isLoginPage && (
                 <Input
                   placeholder="Your Name"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
+                )}
                 <Input
                   placeholder="Email"
                   value={email}
@@ -86,13 +100,13 @@ export const LoginRegister = () => {
                 <button
                   type="button"
                   className="btn btn-lg btn-primary pull-xs-right"
-                  onClick={isLoginPage ? loginHandler : registerHandler}
+                  onClick={internalProps.onClickHandler}
                 >
-                  Sign up
+                  {internalProps.title}
                 </button>
               </form>
             </div>
-            )}
+
           </div>
         </div>
 
