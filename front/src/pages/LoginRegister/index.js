@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useRouteMatch, Redirect } from 'react-router-dom';
+import { useRouteMatch, Redirect, Link } from 'react-router-dom';
 import { DefaultPage, ErrorList, Input } from 'components';
 import { postRequest, USERS_ROUTE, USERS_LOGIN_ROUTE } from 'api';
 import { useUser } from 'hooks';
@@ -56,7 +56,7 @@ export const LoginRegister = () => {
             <div className="col-md-6 offset-md-3 col-xs-12">
               <h1 className="text-xs-center">Sign up</h1>
               <p className="text-xs-center">
-                <a href="/">Have an account?</a>
+                <Link to={LOGIN}>Have an account?</Link>
               </p>
 
               {errors && (
