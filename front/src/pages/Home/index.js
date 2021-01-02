@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   DefaultPage,
@@ -9,40 +9,61 @@ import {
 import { useUser } from 'hooks';
 import { getRequest, ARTICLES_ROUTE, TAGS_ROUTE } from 'api';
 import { HOME } from '../../routes';
+import { reducer, initialState } from './reducer';
+import {
+  LOADING,
+  FETCH_GLOBAL_FEED,
+  SHOW_GLOBAL_FEED,
+  FETCH_TAG,
+  SHOW_TAG,
+  FETCH_USER_FEED,
+  SHOW_USER_FEED,
+  SET_PAGE,
+} from './actions';
 
 const ARTICLES_PER_PAGE = 10;
 
 export const Home = () => {
   const { user } = useUser();
-  const [globalFeedActive, setGlobalFeedActive] = useState(true);
-  const [articles, setArticles] = useState([]);
-  const [articlesCount, setArticlesCount] = useState(0);
-  const [activePage, setActivePage] = useState(1);
   const [tags, setTags] = useState([]);
-  const [currentTag, setCurrentTag] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const {
+    loading,
+    articles,
+    articlesCount,
+    currentTag,
+    activePage,
+    globalFeedActive,
+  } = state;
 
   useEffect(async () => {
+    let futureAction = SHOW_GLOBAL_FEED;
+
     const searchParams = {
       limit: ARTICLES_PER_PAGE,
       offset: (activePage - 1) * ARTICLES_PER_PAGE,
     };
     if (currentTag) {
       searchParams.tag = currentTag;
+      futureAction = SHOW_TAG;
     }
     if (!globalFeedActive && !currentTag) {
       searchParams.author = user.username;
+      futureAction = SHOW_USER_FEED;
     }
 
-    setLoading(true);
-    setArticles([]);
-    setArticlesCount(0);
+    dispatch({ type: LOADING });
 
     const data = await getRequest(ARTICLES_ROUTE, searchParams);
 
-    setLoading(false);
-    setArticles(data.articles);
-    setArticlesCount(data.articlesCount);
+    dispatch({
+      type: futureAction,
+      payload: {
+        articles: data.articles,
+        articlesCount: data.articlesCount,
+        currentTag: futureAction === SHOW_TAG ? currentTag : null,
+      },
+    });
   }, [globalFeedActive, activePage, currentTag]);
 
   useEffect(async () => {
@@ -73,10 +94,7 @@ export const Home = () => {
                       className="nav-link"
                       to={HOME}
                       isActive={() => !currentTag && !globalFeedActive}
-                      onClick={() => {
-                        setGlobalFeedActive(false);
-                        setCurrentTag(null);
-                      }}
+                      onClick={() => dispatch({ type: FETCH_USER_FEED })}
                     >
                       Your Feed
                     </NavLink>
@@ -87,10 +105,7 @@ export const Home = () => {
                       className="nav-link"
                       to={HOME}
                       isActive={() => !currentTag && globalFeedActive}
-                      onClick={() => {
-                        setGlobalFeedActive(true);
-                        setCurrentTag(null);
-                      }}
+                      onClick={() => !globalFeedActive && dispatch({ type: FETCH_GLOBAL_FEED })}
                     >
                       Global Feed
                     </NavLink>
@@ -129,12 +144,25 @@ export const Home = () => {
               <Pagination
                 pages={Math.ceil(articlesCount / ARTICLES_PER_PAGE)}
                 activePage={activePage}
-                onClick={(page) => setActivePage(page)}
+                onClick={(page) => dispatch({
+                  type: SET_PAGE,
+                  payload: {
+                    activePage: page,
+                  },
+                })}
               />
 
             </div>
 
-            <Tags tags={tags} onClick={(tag) => setCurrentTag(tag)} />
+            <Tags
+              tags={tags}
+              onClick={(tag) => dispatch({
+                type: FETCH_TAG,
+                payload: {
+                  currentTag: tag,
+                },
+              })}
+            />
 
           </div>
         </div>
