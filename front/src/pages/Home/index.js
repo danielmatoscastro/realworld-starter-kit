@@ -23,25 +23,26 @@ export const Home = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(async () => {
-    if (globalFeedActive) {
-      const searchParams = {
-        limit: ARTICLES_PER_PAGE,
-        offset: (activePage - 1) * ARTICLES_PER_PAGE,
-      };
-      if (currentTag) {
-        searchParams.tag = currentTag;
-      }
-
-      setLoading(true);
-      setArticles([]);
-      setArticlesCount(0);
-
-      const data = await getRequest(ARTICLES_ROUTE, searchParams);
-
-      setLoading(false);
-      setArticles(data.articles);
-      setArticlesCount(data.articlesCount);
+    const searchParams = {
+      limit: ARTICLES_PER_PAGE,
+      offset: (activePage - 1) * ARTICLES_PER_PAGE,
+    };
+    if (currentTag) {
+      searchParams.tag = currentTag;
     }
+    if (!globalFeedActive && !currentTag) {
+      searchParams.author = user.username;
+    }
+
+    setLoading(true);
+    setArticles([]);
+    setArticlesCount(0);
+
+    const data = await getRequest(ARTICLES_ROUTE, searchParams);
+
+    setLoading(false);
+    setArticles(data.articles);
+    setArticlesCount(data.articlesCount);
   }, [globalFeedActive, activePage, currentTag]);
 
   useEffect(async () => {
@@ -122,6 +123,8 @@ export const Home = () => {
                   key={article.slug}
                 />
               )))}
+
+              {!loading && articles.length === 0 && <div style={{ marginTop: '1em' }}>No articles are here... yet.</div>}
 
               <Pagination
                 pages={Math.ceil(articlesCount / ARTICLES_PER_PAGE)}
