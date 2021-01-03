@@ -19,6 +19,7 @@ import {
   FETCH_USER_FEED,
   SHOW_USER_FEED,
   SET_PAGE,
+  UPDATE_ARTICLE,
 } from './actions';
 
 const ARTICLES_PER_PAGE = 10;
@@ -54,7 +55,7 @@ export const Home = () => {
 
     dispatch({ type: LOADING });
 
-    const data = await getRequest(ARTICLES_ROUTE, searchParams);
+    const data = await getRequest(ARTICLES_ROUTE, searchParams, user.isLogged ? user.token : null);
 
     dispatch({
       type: futureAction,
@@ -135,6 +136,11 @@ export const Home = () => {
                   slug={article.slug}
                   title={article.title}
                   description={article.description}
+                  favorited={article.favorited}
+                  onClickFavorite={(articleUpdated) => dispatch({
+                    type: UPDATE_ARTICLE,
+                    payload: articleUpdated,
+                  })}
                   key={article.slug}
                 />
               )))}

@@ -303,4 +303,31 @@ describe('Home reducer', () => {
 
     expect(newState.activePage).toEqual(oldState.activePage);
   });
+
+  it('should update article with slug action.payload.slug when receiving action.type: UPDATE_ARTICLE', () => {
+    const oldState = deepFreeze({
+      ...initialState,
+      articles: [
+        { title: 'article-1', slug: 'slug-1', favoritesCount: 1 },
+        { title: 'article-2', slug: 'slug-2', favoritesCount: 2 },
+      ],
+      articlesCount: 2,
+    });
+    const action = {
+      type: actions.UPDATE_ARTICLE,
+      payload: {
+        title: 'article-1-again',
+        slug: 'slug-1',
+        favoritesCount: 0,
+      },
+    };
+
+    const newState = reducer(oldState, action);
+
+    const articleUpdated = newState.articles.find(
+      (article) => article.slug === action.payload.slug,
+    );
+    expect(articleUpdated.title).toEqual(action.payload.title);
+    expect(articleUpdated.favoritesCount).toEqual(action.payload.favoritesCount);
+  });
 });

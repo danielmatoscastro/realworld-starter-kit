@@ -5,14 +5,23 @@ import {
   SUCCESS,
 } from 'api/constants';
 
-export const postRequest = async (endpoint, payload) => {
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
+export const postRequest = async (endpoint, payload, token = null) => {
+  const headers = {
+    'Content-Type': CONTENT_TYPE,
+  };
+  if (token !== null) {
+    headers.Authorization = `Token ${token}`;
+  }
+
+  const options = {
     method: POST,
-    headers: {
-      'Content-Type': CONTENT_TYPE,
-    },
-    body: JSON.stringify(payload),
-  });
+    headers,
+  };
+  if (payload !== null) {
+    options.body = JSON.stringify(payload);
+  }
+
+  const response = await fetch(`${BASE_URL}${endpoint}`, options);
 
   const data = await response.json();
 

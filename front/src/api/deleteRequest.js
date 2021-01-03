@@ -1,13 +1,11 @@
 import {
-  BASE_URL, GET, SUCCESS, CONTENT_TYPE,
-} from './constants';
+  BASE_URL,
+  DELETE,
+  CONTENT_TYPE,
+  SUCCESS,
+} from 'api/constants';
 
-export const getRequest = async (endpoint, searchParams, token = null) => {
-  const url = new URL(`${BASE_URL}${endpoint}`);
-  if (searchParams) {
-    url.search = new URLSearchParams(searchParams);
-  }
-
+export const deleteRequest = async (endpoint, token = null) => {
   const headers = {
     'Content-Type': CONTENT_TYPE,
   };
@@ -16,11 +14,12 @@ export const getRequest = async (endpoint, searchParams, token = null) => {
   }
 
   const options = {
-    method: GET,
+    method: DELETE,
     headers,
   };
 
-  const response = await fetch(url, options);
+  const response = await fetch(`${BASE_URL}${endpoint}`, options);
+
   const data = await response.json();
 
   return new Promise((resolve, reject) => {
@@ -32,4 +31,4 @@ export const getRequest = async (endpoint, searchParams, token = null) => {
   });
 };
 
-export default getRequest;
+export default deleteRequest;

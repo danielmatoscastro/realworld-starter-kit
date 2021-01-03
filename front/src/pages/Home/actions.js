@@ -6,3 +6,4 @@ export const SHOW_TAG = 'SHOW_TAG';
 export const FETCH_USER_FEED = 'FETCH_USER_FEED';
 export const SHOW_USER_FEED = 'SHOW_USER_FEED';
 export const SET_PAGE = 'SET_PAGE';
+export const UPDATE_ARTICLE = 'UPDATE_ARTICLE';

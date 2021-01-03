@@ -76,6 +76,17 @@ export const reducer = (oldState, action) => {
         activePage: oldWasTag ? activePage : 1,
         globalFeedActive: false,
       };
+    case actions.UPDATE_ARTICLE:
+      return {
+        ...oldState,
+        articles: articles.map((article) => {
+          if (article.slug !== action.payload.slug) {
+            return article;
+          }
+
+          return action.payload;
+        }),
+      };
     default:
       return initialState;
   }
