@@ -12,6 +12,7 @@ export const CardArticle = ({ article, onClickFavorite }) => {
     title,
     description,
     favorited,
+    tagList,
   } = article;
   const { username, image } = author;
 
@@ -34,6 +35,15 @@ export const CardArticle = ({ article, onClickFavorite }) => {
         <h1>{title}</h1>
         <p>{description}</p>
         <span>Read more...</span>
+        <ul className="tag-list">
+          {
+            tagList.map((tag) => (
+              <li className="tag-default tag-pill tag-outline" key={tag}>
+                {tag}
+              </li>
+            ))
+          }
+        </ul>
       </a>
     </div>
   );
@@ -51,6 +61,7 @@ CardArticle.propTypes = {
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     favorited: PropTypes.bool.isRequired,
+    tagList: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   onClickFavorite: PropTypes.func.isRequired,
 };
