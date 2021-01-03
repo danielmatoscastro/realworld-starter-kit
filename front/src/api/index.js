@@ -1,6 +1,2 @@
-export * from './constants';
-export * from './routes';
-
-export * from './postRequest';
-export * from './getRequest';
-export * from './deleteRequest';
+export * from 'api/routes';
+export * from 'api/request';

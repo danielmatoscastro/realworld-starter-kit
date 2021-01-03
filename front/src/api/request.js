@@ -1,8 +1,12 @@
-import {
-  CONTENT_TYPE,
-  BASE_URL,
-  SUCCESS,
-} from './constants';
+import { BASE_URL } from 'api/routes';
+
+const GET = 'get';
+const POST = 'post';
+const DELETE = 'delete';
+
+const CONTENT_TYPE = 'application/json';
+
+const SUCCESS = 200;
 
 const request = async (endpoint, method, params) => {
   const url = new URL(`${BASE_URL}${endpoint}`);
@@ -36,5 +40,19 @@ const request = async (endpoint, method, params) => {
     }
   });
 };
+
+export const getRequest = async (endpoint, searchParams, token = null) => request(endpoint, GET, {
+  searchParams,
+  token,
+});
+
+export const postRequest = async (endpoint, payload, token = null) => request(endpoint, POST, {
+  payload,
+  token,
+});
+
+export const deleteRequest = async (endpoint, token = null) => request(endpoint, DELETE, {
+  token,
+});
 
 export default request;
