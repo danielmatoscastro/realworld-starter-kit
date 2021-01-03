@@ -130,13 +130,7 @@ export const Home = () => {
 
               {articles.map(((article) => (
                 <CardArticle
-                  author={article.author}
-                  createdAt={article.createdAt}
-                  favoritesCount={article.favoritesCount}
-                  slug={article.slug}
-                  title={article.title}
-                  description={article.description}
-                  favorited={article.favorited}
+                  article={article}
                   onClickFavorite={(articleUpdated) => dispatch({
                     type: UPDATE_ARTICLE,
                     payload: articleUpdated,
