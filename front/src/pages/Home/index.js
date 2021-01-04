@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   DefaultPage,
   CardArticle,
   Pagination,
-  Tags,
 } from 'components';
 import { useUser } from 'hooks';
-import { getRequest, ARTICLES_ROUTE, TAGS_ROUTE } from 'api';
+import { getRequest, ARTICLES_ROUTE } from 'api';
+import { reducer, initialState } from 'pages/Home/reducer';
+import Tags from 'pages/Home/Tags';
 import { HOME } from '../../routes';
-import { reducer, initialState } from './reducer';
 import {
   doFetchUserFeed,
   doFetchGlobalFeed,
@@ -26,7 +26,6 @@ const ARTICLES_PER_PAGE = 10;
 
 export const Home = () => {
   const { user } = useUser();
-  const [tags, setTags] = useState([]);
   const [state, dispatch] = useReducer(reducer, initialState);
   const {
     loading,
@@ -38,7 +37,6 @@ export const Home = () => {
   } = state;
 
   useEffect(async () => {
-    // let futureAction = SHOW_GLOBAL_FEED;
     let futureActionCreator = doShowGlobalFeed;
 
     const searchParams = {
@@ -60,11 +58,6 @@ export const Home = () => {
 
     dispatch(futureActionCreator(data.articles, data.articlesCount, currentTag));
   }, [globalFeedActive, activePage, currentTag]);
-
-  useEffect(async () => {
-    const data = await getRequest(TAGS_ROUTE);
-    setTags(data.tags);
-  }, []);
 
   return (
     <DefaultPage>
@@ -140,11 +133,7 @@ export const Home = () => {
 
             </div>
 
-            <Tags
-              tags={tags}
-              onClick={(tag) => dispatch(doFetchTag(tag))}
-            />
-
+            <Tags onClick={(tag) => dispatch(doFetchTag(tag))} />
           </div>
         </div>
 
