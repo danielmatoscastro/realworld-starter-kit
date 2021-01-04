@@ -1,5 +1,4 @@
 import React, { useEffect, useReducer } from 'react';
-import { NavLink } from 'react-router-dom';
 import {
   DefaultPage,
   CardArticle,
@@ -9,7 +8,7 @@ import { useUser } from 'hooks';
 import { getRequest, ARTICLES_ROUTE } from 'api';
 import { reducer, initialState } from 'pages/Home/reducer';
 import Tags from 'pages/Home/Tags';
-import { HOME } from '../../routes';
+import Tab from 'pages/Home/Tab';
 import {
   doFetchUserFeed,
   doFetchGlobalFeed,
@@ -76,40 +75,22 @@ export const Home = () => {
             <div className="col-md-9">
               <div className="feed-toggle">
                 <ul className="nav nav-pills outline-active">
-                  <li className="nav-item">
-                    {user.isLogged && (
-                    <NavLink
-                      className="nav-link"
-                      to={HOME}
-                      isActive={() => !currentTag && !globalFeedActive}
-                      onClick={() => dispatch(doFetchUserFeed())}
-                    >
-                      Your Feed
-                    </NavLink>
-                    )}
-                  </li>
-                  <li className="nav-item">
-                    <NavLink
-                      className="nav-link"
-                      to={HOME}
-                      isActive={() => !currentTag && globalFeedActive}
-                      onClick={() => !globalFeedActive && dispatch(doFetchGlobalFeed())}
-                    >
-                      Global Feed
-                    </NavLink>
-                  </li>
-
-                  <li className="nav-item">
-                    {currentTag && (
-                    <NavLink
-                      className="nav-link"
-                      to={HOME}
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      {`# ${currentTag}`}
-                    </NavLink>
-                    )}
-                  </li>
+                  <Tab
+                    text="Your Feed"
+                    show={user.isLogged}
+                    isActive={() => !currentTag && !globalFeedActive}
+                    onClick={() => dispatch(doFetchUserFeed())}
+                  />
+                  <Tab
+                    text="Global Feed"
+                    isActive={() => !currentTag && globalFeedActive}
+                    onClick={() => !globalFeedActive && dispatch(doFetchGlobalFeed())}
+                  />
+                  <Tab
+                    text={`# ${currentTag}`}
+                    show={!!currentTag}
+                    onClick={(e) => e.preventDefault()}
+                  />
                 </ul>
               </div>
 
