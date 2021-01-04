@@ -16,7 +16,8 @@ import {
 import { UserProvider } from './providers';
 import {
   Home,
-  LoginRegister,
+  Login,
+  Register,
   Settings,
   CreateEditArticle,
   Article,
@@ -28,8 +29,11 @@ function App() {
     <UserProvider>
       <Router>
         <Switch>
-          <Route path={[LOGIN, REGISTER]}>
-            <LoginRegister />
+          <Route path={LOGIN}>
+            <Login />
+          </Route>
+          <Route path={REGISTER}>
+            <Register />
           </Route>
           <Route path={SETTINGS}>
             <Settings />
