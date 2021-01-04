@@ -11,16 +11,16 @@ import { getRequest, ARTICLES_ROUTE, TAGS_ROUTE } from 'api';
 import { HOME } from '../../routes';
 import { reducer, initialState } from './reducer';
 import {
-  LOADING,
-  FETCH_GLOBAL_FEED,
-  SHOW_GLOBAL_FEED,
-  FETCH_TAG,
-  SHOW_TAG,
-  FETCH_USER_FEED,
-  SHOW_USER_FEED,
-  SET_PAGE,
-  UPDATE_ARTICLE,
-} from './actions';
+  doFetchUserFeed,
+  doFetchGlobalFeed,
+  doLoading,
+  doShowGlobalFeed,
+  doShowTag,
+  doShowUserFeed,
+  doUpdateArticle,
+  doSetPage,
+  doFetchTag,
+} from './actionCreators';
 
 const ARTICLES_PER_PAGE = 10;
 
@@ -38,7 +38,8 @@ export const Home = () => {
   } = state;
 
   useEffect(async () => {
-    let futureAction = SHOW_GLOBAL_FEED;
+    // let futureAction = SHOW_GLOBAL_FEED;
+    let futureActionCreator = doShowGlobalFeed;
 
     const searchParams = {
       limit: ARTICLES_PER_PAGE,
@@ -46,25 +47,18 @@ export const Home = () => {
     };
     if (currentTag) {
       searchParams.tag = currentTag;
-      futureAction = SHOW_TAG;
+      futureActionCreator = doShowTag;
     }
     if (!globalFeedActive && !currentTag) {
       searchParams.author = user.username;
-      futureAction = SHOW_USER_FEED;
+      futureActionCreator = doShowUserFeed;
     }
 
-    dispatch({ type: LOADING });
+    dispatch(doLoading());
 
     const data = await getRequest(ARTICLES_ROUTE, searchParams, user.isLogged ? user.token : null);
 
-    dispatch({
-      type: futureAction,
-      payload: {
-        articles: data.articles,
-        articlesCount: data.articlesCount,
-        currentTag: futureAction === SHOW_TAG ? currentTag : null,
-      },
-    });
+    dispatch(futureActionCreator(data.articles, data.articlesCount, currentTag));
   }, [globalFeedActive, activePage, currentTag]);
 
   useEffect(async () => {
@@ -95,7 +89,7 @@ export const Home = () => {
                       className="nav-link"
                       to={HOME}
                       isActive={() => !currentTag && !globalFeedActive}
-                      onClick={() => dispatch({ type: FETCH_USER_FEED })}
+                      onClick={() => dispatch(doFetchUserFeed())}
                     >
                       Your Feed
                     </NavLink>
@@ -106,7 +100,7 @@ export const Home = () => {
                       className="nav-link"
                       to={HOME}
                       isActive={() => !currentTag && globalFeedActive}
-                      onClick={() => !globalFeedActive && dispatch({ type: FETCH_GLOBAL_FEED })}
+                      onClick={() => !globalFeedActive && dispatch(doFetchGlobalFeed())}
                     >
                       Global Feed
                     </NavLink>
@@ -131,10 +125,7 @@ export const Home = () => {
               {articles.map(((article) => (
                 <CardArticle
                   article={article}
-                  onClickFavorite={(articleUpdated) => dispatch({
-                    type: UPDATE_ARTICLE,
-                    payload: articleUpdated,
-                  })}
+                  onClickFavorite={(articleUpdated) => dispatch(doUpdateArticle(articleUpdated))}
                   key={article.slug}
                 />
               )))}
@@ -144,24 +135,14 @@ export const Home = () => {
               <Pagination
                 pages={Math.ceil(articlesCount / ARTICLES_PER_PAGE)}
                 activePage={activePage}
-                onClick={(page) => dispatch({
-                  type: SET_PAGE,
-                  payload: {
-                    activePage: page,
-                  },
-                })}
+                onClick={(page) => dispatch(doSetPage(page))}
               />
 
             </div>
 
             <Tags
               tags={tags}
-              onClick={(tag) => dispatch({
-                type: FETCH_TAG,
-                payload: {
-                  currentTag: tag,
-                },
-              })}
+              onClick={(tag) => dispatch(doFetchTag(tag))}
             />
 
           </div>
