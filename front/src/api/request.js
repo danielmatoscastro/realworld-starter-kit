@@ -7,7 +7,7 @@ const PUT = 'put';
 
 const CONTENT_TYPE = 'application/json';
 
-const SUCCESS = 200;
+// const SUCCESS = 200;
 
 const request = async (endpoint, method, params) => {
   const url = new URL(`${BASE_URL}${endpoint}`);
@@ -29,36 +29,55 @@ const request = async (endpoint, method, params) => {
   if (params.payload) {
     options.body = JSON.stringify(params.payload);
   }
+  if (params.abortController) {
+    options.signal = params.abortController.signal;
+  }
 
   const response = await fetch(url, options);
-  const data = await response.json();
 
-  return new Promise((resolve, reject) => {
-    if (response.status === SUCCESS) {
-      resolve(data);
-    } else {
-      reject(data);
-    }
-  });
+  return response.json();
 };
 
-export const getRequest = async (endpoint, searchParams, token = null) => request(endpoint, GET, {
+export const getRequest = async (
+  endpoint,
+  searchParams,
+  token = null,
+  abortController = null,
+) => request(endpoint, GET, {
   searchParams,
   token,
+  abortController,
 });
 
-export const postRequest = async (endpoint, payload, token = null) => request(endpoint, POST, {
+export const postRequest = async (
+  endpoint,
+  payload,
+  token = null,
+  abortController = null,
+) => request(endpoint, POST, {
   payload,
   token,
+  abortController,
 });
 
-export const deleteRequest = async (endpoint, token = null) => request(endpoint, DELETE, {
+export const deleteRequest = async (
+  endpoint,
+  token = null,
+  abortController = null,
+) => request(endpoint, DELETE, {
   token,
+  abortController,
 });
 
-export const putRequest = async (endpoint, payload, token = null) => request(endpoint, PUT, {
+export const putRequest = async (
+  endpoint,
+  payload,
+  token = null,
+  abortController = null,
+) => request(endpoint, PUT, {
   payload,
   token,
+  abortController,
 });
 
 export default request;

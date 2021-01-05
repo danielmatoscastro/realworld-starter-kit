@@ -1,10 +1,10 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import {
   DefaultPage,
   CardArticle,
   Pagination,
 } from 'components';
-import { useUser } from 'hooks';
+import { useUser, useAbortOnUnmount, useEffectIgnoringAbortError } from 'hooks';
 import { getRequest, ARTICLES_ROUTE } from 'api';
 import { reducer, initialState } from 'pages/Home/reducer';
 import Tags from 'pages/Home/Tags';
@@ -35,7 +35,9 @@ export const Home = () => {
     globalFeedActive,
   } = state;
 
-  useEffect(async () => {
+  const abortController = useAbortOnUnmount();
+
+  useEffectIgnoringAbortError(async () => {
     let futureActionCreator = doShowGlobalFeed;
 
     const searchParams = {
@@ -53,7 +55,10 @@ export const Home = () => {
 
     dispatch(doLoading());
 
-    const data = await getRequest(ARTICLES_ROUTE, searchParams, user.isLogged ? user.token : null);
+    const data = await getRequest(ARTICLES_ROUTE,
+      searchParams,
+      user.isLogged ? user.token : null,
+      abortController);
 
     dispatch(futureActionCreator(data.articles, data.articlesCount, currentTag));
   }, [globalFeedActive, activePage, currentTag]);

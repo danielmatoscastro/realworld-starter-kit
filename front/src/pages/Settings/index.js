@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
-import { useUser } from 'hooks';
+import { useUser, useAbortOnUnmount } from 'hooks';
 import { DefaultPage, ErrorList } from 'components';
 import { putRequest, USER_ROUTE } from 'api';
 import { HOME, PROFILE_F } from '../../routes';
@@ -9,6 +9,7 @@ export const Settings = () => {
   const { user, setUser } = useUser();
   const history = useHistory();
   const [errors, setErrors] = useState(null);
+  const abortController = useAbortOnUnmount();
 
   if (!user.isLogged) {
     return <Redirect to={HOME} />;
@@ -22,12 +23,21 @@ export const Settings = () => {
         .filter((el) => el.name && el.value !== '')
         .reduce((formData, el) => ({ ...formData, [el.name]: el.value }), {});
 
-      const response = await putRequest(USER_ROUTE, { user: payload }, user.token);
-      setUser({ ...response.user, isLogged: true });
+      const response = await putRequest(USER_ROUTE,
+        { user: payload },
+        user.token,
+        abortController);
 
-      history.push(PROFILE_F(response.user.username));
+      if (response.user) {
+        setUser({ ...response.user, isLogged: true });
+        history.push(PROFILE_F(response.user.username));
+      } else {
+        setErrors(response.errors);
+      }
     } catch (err) {
-      setErrors(err.errors);
+      if (err.name !== 'AbortError') {
+        throw err;
+      }
     }
   };
 

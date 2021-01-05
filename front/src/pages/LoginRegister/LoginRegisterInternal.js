@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { DefaultPage, ErrorList, Input } from 'components';
 import { postRequest } from 'api';
-import { useUser } from 'hooks';
+import { useUser, useAbortOnUnmount } from 'hooks';
 import { HOME } from '../../routes';
 
 const LoginRegisterInternal = ({ data }) => {
@@ -18,9 +18,9 @@ const LoginRegisterInternal = ({ data }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const { user, setUser } = useUser();
   const [errors, setErrors] = useState({});
+  const { user, setUser } = useUser();
+  const abortController = useAbortOnUnmount();
 
   if (user.isLogged) {
     return <Redirect to={HOME} />;
@@ -29,14 +29,21 @@ const LoginRegisterInternal = ({ data }) => {
   const onClickHandler = (formData) => async (e) => {
     try {
       e.preventDefault();
-      const response = await postRequest(endpoint, payloadBuilder(formData));
-      setUser({
-        ...user,
-        ...response.user,
-        isLogged: true,
-      });
+      const response = await postRequest(endpoint, payloadBuilder(formData), null, abortController);
+
+      if (response.user) {
+        setUser({
+          ...user,
+          ...response.user,
+          isLogged: true,
+        });
+      } else {
+        setErrors(response.errors);
+      }
     } catch (err) {
-      setErrors(err.errors);
+      if (err.name !== 'AbortError') {
+        throw err;
+      }
     }
   };
 

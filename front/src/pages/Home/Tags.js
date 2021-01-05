@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { getRequest, TAGS_ROUTE } from 'api';
+import { useAbortOnUnmount, useEffectIgnoringAbortError } from 'hooks';
 import { HOME } from '../../routes';
 
 const Tags = ({ onClick }) => {
   const [tags, setTags] = useState([]);
+  const abortController = useAbortOnUnmount();
 
-  useEffect(async () => {
-    const data = await getRequest(TAGS_ROUTE);
+  useEffectIgnoringAbortError(async () => {
+    const data = await getRequest(TAGS_ROUTE, null, null, abortController);
     setTags(data.tags);
   }, []);
 

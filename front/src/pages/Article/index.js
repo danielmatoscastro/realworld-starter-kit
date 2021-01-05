@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import {
@@ -10,13 +10,14 @@ import {
   COMMENTS_DELETE_ROUTE_F,
 } from 'api';
 import { DefaultPage } from 'components/DefaultPage';
-import { useUser } from 'hooks';
+import { useUser, useAbortOnUnmount, useEffectIgnoringAbortError } from 'hooks';
 import Comments from 'pages/Article/Comments';
 import ArticleMeta from 'pages/Article/ArticleMeta';
 
 export const Article = () => {
   const { slug } = useParams();
   const { user } = useUser();
+  const abortController = useAbortOnUnmount();
   const [article, setArticle] = useState({
     createdAt: new Date().toString(),
     slug: '',
@@ -29,31 +30,46 @@ export const Article = () => {
   });
   const [comments, setComments] = useState([]);
 
-  useEffect(async () => {
-    const response = await getRequest(ARTICLES_ROUTE_F(slug));
+  useEffectIgnoringAbortError(async () => {
+    const response = await getRequest(ARTICLES_ROUTE_F(slug), null, null, abortController);
+
     setArticle(response.article);
   }, [slug]);
 
-  useEffect(async () => {
-    const response = await getRequest(COMMENTS_ROUTE_F(slug));
+  useEffectIgnoringAbortError(async () => {
+    const response = await getRequest(COMMENTS_ROUTE_F(slug), null, null, abortController);
+
     setComments(response.comments);
   }, [slug]);
 
   const addComment = async (e) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    const response = await postRequest(COMMENTS_ROUTE_F(slug), {
-      comment: {
-        body: e.target.comment.value,
-      },
-    }, user.token);
+      const response = await postRequest(COMMENTS_ROUTE_F(slug), {
+        comment: {
+          body: e.target.comment.value,
+        },
+      }, user.token, abortController);
 
-    setComments([response.comment, ...comments]);
+      setComments([response.comment, ...comments]);
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        throw err;
+      }
+    }
   };
 
   const deleteComment = (id) => async () => {
-    await deleteRequest(COMMENTS_DELETE_ROUTE_F(slug, id), user.token);
-    setComments(comments.filter((comment) => comment.id !== id));
+    try {
+      await deleteRequest(COMMENTS_DELETE_ROUTE_F(slug, id), user.token, abortController);
+
+      setComments(comments.filter((comment) => comment.id !== id));
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        throw err;
+      }
+    }
   };
 
   const { author } = article;
