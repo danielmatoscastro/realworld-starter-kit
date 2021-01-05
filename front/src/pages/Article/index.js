@@ -4,8 +4,10 @@ import ReactMarkdown from 'react-markdown';
 import {
   getRequest,
   postRequest,
+  deleteRequest,
   ARTICLES_ROUTE_F,
   COMMENTS_ROUTE_F,
+  COMMENTS_DELETE_ROUTE_F,
 } from 'api';
 import { DefaultPage } from 'components/DefaultPage';
 import { useUser } from 'hooks';
@@ -38,6 +40,11 @@ export const Article = () => {
     }, user.token);
 
     setComments([response.comment, ...comments]);
+  };
+
+  const deleteComment = (id) => async () => {
+    await deleteRequest(COMMENTS_DELETE_ROUTE_F(slug, id), user.token);
+    setComments(comments.filter((comment) => comment.id !== id));
   };
 
   const { author } = article;
@@ -91,7 +98,7 @@ export const Article = () => {
                 </div>
               </form>
 
-              <Comments comments={comments} />
+              <Comments comments={comments} deleteComment={deleteComment} />
 
             </div>
           </div>

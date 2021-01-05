@@ -7,6 +7,7 @@ export const ARTICLES_ROUTE = '/articles';
 export const ARTICLES_ROUTE_F = (slug) => `/articles/${slug}`;
 export const FAVORITE_ROUTE_F = (slug) => `/articles/${slug}/favorite`;
 export const COMMENTS_ROUTE_F = (slug) => `/articles/${slug}/comments`;
+export const COMMENTS_DELETE_ROUTE_F = (slug, id) => `/articles/${slug}/comments/${id}`;
 
 export const FOLLOW_ROUTE_F = (slug) => `/profiles/${slug}/follow`;
 
