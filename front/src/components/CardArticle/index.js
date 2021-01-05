@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { PROFILE_F, ARTICLE_F } from '../../routes';
-import FavoriteButton from '../FavoriteButton';
+import { FavoriteButton } from '../FavoriteButton';
 
 export const CardArticle = ({ article, onClickFavorite }) => {
   const {
@@ -26,10 +26,12 @@ export const CardArticle = ({ article, onClickFavorite }) => {
         </div>
         <FavoriteButton
           favorited={favorited}
-          favoritesCount={favoritesCount}
           slug={slug}
           onClickFavorite={onClickFavorite}
-        />
+          className="pull-xs-right"
+        >
+          <span>{favoritesCount}</span>
+        </FavoriteButton>
       </div>
       <a href={ARTICLE_F(slug)} className="preview-link">
         <h1>{title}</h1>

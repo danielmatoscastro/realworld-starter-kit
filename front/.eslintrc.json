@@ -40,6 +40,14 @@
                     ".jsx"
                 ]
             }
+        ],
+        "react/jsx-props-no-spreading": [
+            1,
+            {
+                "exceptions": [
+                    "FavoriteButtonBig"
+                ]
+            }
         ]
     }
 }

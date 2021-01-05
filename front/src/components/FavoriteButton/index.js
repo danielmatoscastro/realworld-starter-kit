@@ -5,11 +5,12 @@ import { postRequest, deleteRequest, FAVORITE_ROUTE_F } from 'api';
 import { useUser } from 'hooks';
 import { LOGIN } from '../../routes';
 
-const FavoriteButton = ({
+export const FavoriteButton = ({
   favorited,
-  favoritesCount,
   slug,
   onClickFavorite,
+  className,
+  children,
 }) => {
   const { user } = useUser();
   const history = useHistory();
@@ -33,21 +34,26 @@ const FavoriteButton = ({
   return (
     <button
       type="button"
-      className={`btn ${favorited ? 'btn-primary' : 'btn-outline-primary'} btn-sm pull-xs-right`}
+      className={`btn ${favorited ? 'btn-primary' : 'btn-outline-primary'} btn-sm ${className}`}
       onClick={onClickHandler}
     >
       <i className="ion-heart" />
       {' '}
-      {favoritesCount}
+      {children}
     </button>
   );
 };
 
+FavoriteButton.defaultProps = {
+  className: '',
+};
+
 FavoriteButton.propTypes = {
   favorited: PropTypes.bool.isRequired,
-  favoritesCount: PropTypes.number.isRequired,
   slug: PropTypes.string.isRequired,
   onClickFavorite: PropTypes.func.isRequired,
+  className: PropTypes.string,
+  children: PropTypes.node.isRequired,
 };
 
 export default FavoriteButton;
