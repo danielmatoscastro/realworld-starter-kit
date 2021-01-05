@@ -17,7 +17,16 @@ import ArticleMeta from 'pages/Article/ArticleMeta';
 export const Article = () => {
   const { slug } = useParams();
   const { user } = useUser();
-  const [article, setArticle] = useState({ author: {} });
+  const [article, setArticle] = useState({
+    createdAt: new Date().toString(),
+    slug: '',
+    favorited: false,
+    favoritesCount: 0,
+    author: {
+      username: '',
+      following: false,
+    },
+  });
   const [comments, setComments] = useState([]);
 
   useEffect(async () => {
@@ -80,6 +89,10 @@ export const Article = () => {
           <div className="article-actions">
             <ArticleMeta
               article={article}
+              onClickFollow={() => setArticle({
+                ...article,
+                author: { ...author, following: !author.following },
+              })}
               onClickFavorite={(updatedArticle) => setArticle(updatedArticle)}
             />
           </div>
