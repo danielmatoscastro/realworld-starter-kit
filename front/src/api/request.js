@@ -3,6 +3,7 @@ import { BASE_URL } from 'api/routes';
 const GET = 'get';
 const POST = 'post';
 const DELETE = 'delete';
+const PUT = 'put';
 
 const CONTENT_TYPE = 'application/json';
 
@@ -52,6 +53,11 @@ export const postRequest = async (endpoint, payload, token = null) => request(en
 });
 
 export const deleteRequest = async (endpoint, token = null) => request(endpoint, DELETE, {
+  token,
+});
+
+export const putRequest = async (endpoint, payload, token = null) => request(endpoint, PUT, {
+  payload,
   token,
 });
 

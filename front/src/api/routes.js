@@ -11,4 +11,6 @@ export const COMMENTS_DELETE_ROUTE_F = (slug, id) => `/articles/${slug}/comments
 
 export const FOLLOW_ROUTE_F = (slug) => `/profiles/${slug}/follow`;
 
+export const USER_ROUTE = '/user';
+
 export const TAGS_ROUTE = '/tags';
