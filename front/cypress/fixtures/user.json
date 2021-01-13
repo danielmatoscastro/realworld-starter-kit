@@ -1,0 +1,12 @@
+{
+    "user": {
+        "id": 133993,
+        "email": "umoh.ben.1656854l@johnmasters.hk",
+        "createdAt": "2021-01-07T23:18:37.133Z",
+        "updatedAt": "2021-01-07T23:41:45.750Z",
+        "username": "umoh.ben",
+        "bio": "some bio",
+        "image": "https://static.productionready.io/images/smiley-cyrus.jpg",
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTMzOTkzLCJ1c2VybmFtZSI6InVtb2guYmVuIiwiZXhwIjoxNjE1Njc4MTU1fQ.mQJVE5XNNgE6wYxNzXKkQKdqk_uIx0TYlcIFe5xSdw4"
+    }
+}

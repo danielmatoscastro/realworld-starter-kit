@@ -22,6 +22,10 @@ export const UserProvider = ({ children }) => {
     Storage.setItem('user', newUser);
   };
 
+  if (window.Cypress) {
+    window.setUser = wrappedSetUser;
+  }
+
   return (
     <UserContext.Provider value={{ user, setUser: wrappedSetUser }}>
       {children}

@@ -1,0 +1,4 @@
+{
+    "login": "https://conduit.productionready.io/api/users/login",
+    "user": "https://conduit.productionready.io/api/user"
+}
