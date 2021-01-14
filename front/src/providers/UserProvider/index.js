@@ -4,14 +4,14 @@ import { Storage } from 'utils';
 
 export const UserContext = createContext(undefined);
 
+const initialState = {
+  id: 1,
+  username: 'username',
+  isLogged: false,
+};
+
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const initialState = {
-      id: 1,
-      username: 'username',
-      isLogged: false,
-    };
-
     const userStorage = Storage.getItem('user');
 
     return userStorage ?? initialState;
@@ -22,12 +22,17 @@ export const UserProvider = ({ children }) => {
     Storage.setItem('user', newUser);
   };
 
+  const clearUser = () => {
+    setUser(initialState);
+    Storage.removeItem('user');
+  };
+
   if (window.Cypress) {
     window.setUser = wrappedSetUser;
   }
 
   return (
-    <UserContext.Provider value={{ user, setUser: wrappedSetUser }}>
+    <UserContext.Provider value={{ user, setUser: wrappedSetUser, clearUser }}>
       {children}
     </UserContext.Provider>
   );

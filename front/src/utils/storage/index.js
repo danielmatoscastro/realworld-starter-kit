@@ -8,6 +8,10 @@ export class Storage {
   static getItem(key) {
     return JSON.parse(localStorage.getItem(`${PREFIX}/${key}`));
   }
+
+  static removeItem(key) {
+    localStorage.removeItem(`${PREFIX}/${key}`);
+  }
 }
 
 export default Storage;

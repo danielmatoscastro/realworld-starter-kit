@@ -6,7 +6,7 @@ import { putRequest, USER_ROUTE } from 'api';
 import { HOME, PROFILE_F } from '../../routes';
 
 export const Settings = () => {
-  const { user, setUser } = useUser();
+  const { user, setUser, clearUser } = useUser();
   const history = useHistory();
   const [errors, setErrors] = useState(null);
   const abortController = useAbortOnUnmount();
@@ -39,6 +39,11 @@ export const Settings = () => {
         throw err;
       }
     }
+  };
+
+  const onLogoutHandler = () => {
+    clearUser();
+    history.push(HOME);
   };
 
   return (
@@ -85,8 +90,12 @@ export const Settings = () => {
                   </button>
                 </fieldset>
               </form>
-            </div>
+              <hr />
+              <button type="button" className="btn btn-outline-danger" onClick={onLogoutHandler}>
+                Or click here to logout.
+              </button>
 
+            </div>
           </div>
         </div>
       </div>
