@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 import { useUser, useAbortOnUnmount } from 'hooks';
 import { CreateEditArticlePage } from 'components';
@@ -6,26 +6,20 @@ import { postRequest, ARTICLES_ROUTE } from 'api';
 import { HOME, ARTICLE_F } from '../../routes';
 
 export const CreateArticle = () => {
+  const [article, setArticle] = useState({
+    title: '',
+    description: '',
+    body: '',
+    tagList: [],
+  });
   const history = useHistory();
   const { user } = useUser();
   const abortController = useAbortOnUnmount();
 
-  if (!user.isLogged) {
-    return <Redirect to={HOME} />;
-  }
-
-  const onSubmitHandler = async (e) => {
+  const onClickHandler = async () => {
     try {
-      e.preventDefault();
-
-      const payload = Array.from(e.target.elements)
-        .filter((el) => el.name && el.value !== '')
-        .reduce((formData, el) => ({ ...formData, [el.name]: el.value }), {});
-
-      payload.tagList = payload.tagList.split(' ');
-
       const response = await postRequest(ARTICLES_ROUTE,
-        { article: payload },
+        { article },
         user.token,
         abortController);
 
@@ -37,8 +31,16 @@ export const CreateArticle = () => {
     }
   };
 
+  if (!user.isLogged) {
+    return <Redirect to={HOME} />;
+  }
+
   return (
-    <CreateEditArticlePage onSubmitHandler={onSubmitHandler} />
+    <CreateEditArticlePage
+      onClickHandler={onClickHandler}
+      article={article}
+      setArticle={setArticle}
+    />
   );
 };
 export default CreateArticle;
