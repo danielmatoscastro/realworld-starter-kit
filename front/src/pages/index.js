@@ -1,5 +1,6 @@
 export * from './Article';
-export * from './CreateEditArticle';
+export * from './CreateArticle';
+export * from './EditArticle';
 export * from './Home';
 export * from './LoginRegister';
 export * from './Profile';
