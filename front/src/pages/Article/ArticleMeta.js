@@ -2,11 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { formatDate } from 'utils';
-import { FavoriteButton, FollowButton } from 'components';
+import { useUser } from 'hooks';
+import { OwnerButtons } from './OwnerButtons';
+import { NotOwnerButtons } from './NotOwnerButtons';
 import { PROFILE_F } from '../../routes';
 
 const ArticleMeta = ({ article, onClickFollow, onClickFavorite }) => {
+  const { user } = useUser();
+
   const { author } = article;
+  const isOwner = author.username === user.username;
 
   return (
     <div className="article-meta">
@@ -15,31 +20,24 @@ const ArticleMeta = ({ article, onClickFollow, onClickFavorite }) => {
         <Link to={PROFILE_F(author.username)} className="author">{author.username}</Link>
         <span className="date">{formatDate(article.createdAt)}</span>
       </div>
-      <FollowButton
-        username={author.username}
-        following={author.following}
-        onClickFollow={onClickFollow}
-      >
-        <span>
-          {`${author.following ? 'Unfollow' : 'Follow'} ${author.username}`}
-        </span>
-      </FollowButton>
-&nbsp;&nbsp;
-      <FavoriteButton
-        favorited={article.favorited}
-        favoritesCount={article.favoritesCount}
-        slug={article.slug}
-        onClickFavorite={onClickFavorite}
-      >
-        <span className="counter">
-          {`${article.favorited ? 'Unfavorite' : 'Favorite'} Article (${article.favoritesCount})`}
-        </span>
-      </FavoriteButton>
+
+      {isOwner
+        ? (
+          <OwnerButtons />
+        )
+        : (
+          <NotOwnerButtons
+            article={article}
+            onClickFollow={onClickFollow}
+            onClickFavorite={onClickFavorite}
+          />
+        )}
 
     </div>
 
   );
 };
+
 ArticleMeta.propTypes = {
   article: PropTypes.shape({
     author: PropTypes.shape().isRequired,
