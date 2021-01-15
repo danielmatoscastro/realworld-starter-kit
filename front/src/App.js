@@ -19,9 +19,10 @@ import {
   Login,
   Register,
   Settings,
-  CreateEditArticle,
+  CreateArticle,
   Article,
   Profile,
+  EditArticle,
 } from './pages';
 
 function App() {
@@ -38,8 +39,11 @@ function App() {
           <Route path={SETTINGS}>
             <Settings />
           </Route>
-          <Route path={[EDITOR, EDITOR_SLUG]}>
-            <CreateEditArticle />
+          <Route path={EDITOR} exact>
+            <CreateArticle />
+          </Route>
+          <Route path={EDITOR_SLUG}>
+            <EditArticle />
           </Route>
           <Route path={ARTICLE_SLUG}>
             <Article />
