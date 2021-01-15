@@ -19,7 +19,6 @@ export const NotOwnerButtons = ({ article, onClickFollow, onClickFavorite }) => 
 &nbsp;&nbsp;
       <FavoriteButton
         favorited={article.favorited}
-        favoritesCount={article.favoritesCount}
         slug={article.slug}
         onClickFavorite={onClickFavorite}
       >
