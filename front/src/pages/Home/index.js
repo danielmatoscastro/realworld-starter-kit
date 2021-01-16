@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {
-  DefaultPage,
-  TabsToggle,
-  Tab,
-} from 'components';
+import { DefaultPage, TabsToggle, Tab } from 'components';
 import { useUser } from 'hooks';
-import { ARTICLES_ROUTE } from 'api';
+import { ARTICLES_ROUTE, FEED_ROUTE } from 'api';
 import Tags from './Tags';
 
 const initialTabs = [
@@ -27,10 +23,8 @@ export const Home = () => {
       setTabs([{
         name: 'Your Feed',
         active: true,
-        endpoint: ARTICLES_ROUTE,
-        searchParams: {
-          author: user.username,
-        },
+        endpoint: FEED_ROUTE,
+        searchParams: {},
       }, ...tabs.map((tab) => ({ ...tab, active: false }))]);
       setStaticTabsQt(2);
     } else {

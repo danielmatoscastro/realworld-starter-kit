@@ -4,6 +4,7 @@ export const USERS_ROUTE = '/users';
 export const USERS_LOGIN_ROUTE = '/users/login';
 
 export const ARTICLES_ROUTE = '/articles';
+export const FEED_ROUTE = '/articles/feed';
 export const ARTICLES_ROUTE_F = (slug) => `/articles/${slug}`;
 export const FAVORITE_ROUTE_F = (slug) => `/articles/${slug}/favorite`;
 export const COMMENTS_ROUTE_F = (slug) => `/articles/${slug}/comments`;
