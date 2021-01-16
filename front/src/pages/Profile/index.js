@@ -55,7 +55,7 @@ export const Profile = () => {
     ]);
   }, []);
 
-  const activeTab = tabs.find((tab) => tab.active);
+  const activeTab = tabs.find((tab) => tab.active) ?? {};
 
   return (
     <DefaultPage>
