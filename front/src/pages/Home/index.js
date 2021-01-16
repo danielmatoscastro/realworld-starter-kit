@@ -86,13 +86,11 @@ export const Home = () => {
                   <TabsToggle tabs={tabs} setActiveTab={setActiveTab} />
                 </ul>
               </div>
-
               {tabs.map((tab) => (
                 <div key={tab.name}>
                   {activeTab.name === tab.name && <Tab tab={tab} />}
                 </div>
               ))}
-
             </div>
 
             <Tags onClick={addTagTab} />

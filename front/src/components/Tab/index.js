@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useAbortOnUnmount, useEffectIgnoringAbortError, usePrevious } from 'hooks';
+import {
+  useUser,
+  useAbortOnUnmount,
+  useEffectIgnoringAbortError,
+  usePrevious,
+} from 'hooks';
 import { getRequest } from 'api';
 import { CardArticle } from 'components/CardArticle';
 import { Pagination } from 'components/Pagination';
@@ -8,6 +13,7 @@ import { Pagination } from 'components/Pagination';
 const ARTICLES_PER_PAGE = 10;
 
 export const Tab = ({ tab }) => {
+  const { user } = useUser();
   const [articles, setArticles] = useState([]);
   const [articlesCount, setArticlesCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -27,7 +33,7 @@ export const Tab = ({ tab }) => {
           limit: ARTICLES_PER_PAGE,
           offset: (activePage - 1) * ARTICLES_PER_PAGE,
         },
-        null,
+        user.isLogged ? user.token : null,
         abortController);
 
       setArticles(response.articles);
@@ -36,13 +42,13 @@ export const Tab = ({ tab }) => {
     }
   }, [tab, activePage]);
 
-  const onClickFavorite = (updatedArticle) => articles.map((article) => {
+  const onClickFavorite = (updatedArticle) => setArticles(articles.map((article) => {
     if (article.slug !== updatedArticle.slug) {
       return article;
     }
 
     return updatedArticle;
-  });
+  }));
 
   const hasArticles = !loading && articles.length !== 0;
   const hasNoArticles = !loading && articles.length === 0;
