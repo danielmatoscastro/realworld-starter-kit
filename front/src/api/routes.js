@@ -9,6 +9,7 @@ export const FAVORITE_ROUTE_F = (slug) => `/articles/${slug}/favorite`;
 export const COMMENTS_ROUTE_F = (slug) => `/articles/${slug}/comments`;
 export const COMMENTS_DELETE_ROUTE_F = (slug, id) => `/articles/${slug}/comments/${id}`;
 
+export const PROFILE_ROUTE_F = (slug) => `/profiles/${slug}`;
 export const FOLLOW_ROUTE_F = (slug) => `/profiles/${slug}/follow`;
 
 export const USER_ROUTE = '/user';

@@ -1,98 +1,96 @@
-import React from 'react';
-import { DefaultPage } from 'components';
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useUser, useEffectIgnoringAbortError, useAbortOnUnmount } from 'hooks';
+import { getRequest, PROFILE_ROUTE_F, ARTICLES_ROUTE } from 'api';
+import { DefaultPage, FollowButton } from 'components';
+import { TabsToggle } from './TabsToggle';
+import { Tab } from './Tab';
 
-export const Profile = () => (
-  <DefaultPage>
-    <div className="profile-page">
+export const Profile = () => {
+  const { slug } = useParams();
+  const { user } = useUser();
+  const abortController = useAbortOnUnmount();
+  const [profile, setProfile] = useState({
+    image: '',
+    username: '',
+    bio: '',
+    following: false,
+  });
 
-      <div className="user-info">
+  const [tabs, setTabs] = useState([{
+    name: '',
+    active: false,
+    endpoint: '',
+    searchParams: {},
+  }]);
+
+  const setActiveTab = (tabName) => setTabs(tabs.map((tab) => ({
+    ...tab,
+    active: tab.name === tabName,
+  })));
+
+  useEffectIgnoringAbortError(async () => {
+    const response = await getRequest(PROFILE_ROUTE_F(slug), null, user.token, abortController);
+    setProfile(response.profile);
+    setTabs([
+      {
+        name: 'My Articles',
+        active: true,
+        endpoint: ARTICLES_ROUTE,
+        searchParams: {
+          author: response.profile.username,
+        },
+      },
+      {
+        name: 'Favorited Articles',
+        active: false,
+        endpoint: ARTICLES_ROUTE,
+        searchParams: {
+          favorited: response.profile.username,
+        },
+      },
+    ]);
+  }, []);
+
+  const activeTab = tabs.find((tab) => tab.active);
+
+  return (
+    <DefaultPage>
+      <div className="profile-page">
+        <div className="user-info">
+          <div className="container">
+            <div className="row">
+              <div className="col-xs-12 col-md-10 offset-md-1">
+                <img src={profile.image} className="user-img" alt="user" />
+                <h4>{profile.username}</h4>
+                <p>
+                  {profile.bio}
+                </p>
+                <FollowButton
+                  username={profile.username}
+                  following={profile.following}
+                  onClickFollow={(updatedProfile) => setProfile(updatedProfile)}
+                  className="pull-xs-right"
+                >
+                  {`${profile.following ? 'Unfollow' : 'Follow'} ${profile.username}`}
+                </FollowButton>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="container">
           <div className="row">
-
             <div className="col-xs-12 col-md-10 offset-md-1">
-              <img src="http://i.imgur.com/Qr71crq.jpg" className="user-img" alt="user" />
-              <h4>Eric Simons</h4>
-              <p>
-                Cofounder @GoThinkster, lived in Aol&apos;s HQ for a few months, kinda looks
-                like Peeta from the Hunger Games
-              </p>
-              <button type="button" className="btn btn-sm btn-outline-secondary action-btn">
-                <i className="ion-plus-round" />
-                &nbsp;
-                Follow Eric Simons
-              </button>
+              <TabsToggle tabs={tabs} setActiveTab={setActiveTab} />
+              {activeTab && <Tab tab={activeTab} />}
             </div>
-
           </div>
         </div>
+
       </div>
-
-      <div className="container">
-        <div className="row">
-
-          <div className="col-xs-12 col-md-10 offset-md-1">
-            <div className="articles-toggle">
-              <ul className="nav nav-pills outline-active">
-                <li className="nav-item">
-                  <a className="nav-link active" href="/">My Articles</a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="/">Favorited Articles</a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="article-preview">
-              <div className="article-meta">
-                <a href="/"><img src="http://i.imgur.com/Qr71crq.jpg" alt="article 1" /></a>
-                <div className="info">
-                  <a href="/" className="author">Eric Simons</a>
-                  <span className="date">January 20th</span>
-                </div>
-                <button type="button" className="btn btn-outline-primary btn-sm pull-xs-right">
-                  <i className="ion-heart" />
-                  {' '}
-                  29
-                </button>
-              </div>
-              <a href="/" className="preview-link">
-                <h1>How to build webapps that scale</h1>
-                <p>This is the description for the post.</p>
-                <span>Read more...</span>
-              </a>
-            </div>
-
-            <div className="article-preview">
-              <div className="article-meta">
-                <a href="/"><img src="http://i.imgur.com/N4VcUeJ.jpg" alt="article 2" /></a>
-                <div className="info">
-                  <a href="/" className="author">Albert Pai</a>
-                  <span className="date">January 20th</span>
-                </div>
-                <button type="button" className="btn btn-outline-primary btn-sm pull-xs-right">
-                  <i className="ion-heart" />
-                  {' '}
-                  32
-                </button>
-              </div>
-              <a href="/" className="preview-link">
-                <h1>The song you won&apos;t ever stop singing. No matter how hard you try.</h1>
-                <p>This is the description for the post.</p>
-                <span>Read more...</span>
-                <ul className="tag-list">
-                  <li className="tag-default tag-pill tag-outline">Music</li>
-                  <li className="tag-default tag-pill tag-outline">Song</li>
-                </ul>
-              </a>
-            </div>
-
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-  </DefaultPage>
-);
+    </DefaultPage>
+  );
+};
 
 export default Profile;
