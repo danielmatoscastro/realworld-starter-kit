@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   DefaultPage,
   TabsToggle,
@@ -8,31 +8,41 @@ import { useUser } from 'hooks';
 import { ARTICLES_ROUTE } from 'api';
 import Tags from './Tags';
 
-const STATIC_TABS_QT = 2;
+const initialTabs = [
+  {
+    name: 'GlobalFeed',
+    active: true,
+    endpoint: ARTICLES_ROUTE,
+    searchParams: {},
+  },
+];
 
 export const Home = () => {
   const { user } = useUser();
-  const [tabs, setTabs] = useState([
-    {
-      name: 'Your Feed',
-      active: true,
-      endpoint: ARTICLES_ROUTE,
-      searchParams: {
-        author: user.username,
-      },
-    },
-    {
-      name: 'GlobalFeed',
-      active: false,
-      endpoint: ARTICLES_ROUTE,
-      searchParams: {},
-    },
-  ]);
+  const [tabs, setTabs] = useState(initialTabs);
+  const [staticTabsQt, setStaticTabsQt] = useState(1);
+
+  useEffect(() => {
+    if (user.isLogged) {
+      setTabs([{
+        name: 'Your Feed',
+        active: true,
+        endpoint: ARTICLES_ROUTE,
+        searchParams: {
+          author: user.username,
+        },
+      }, ...tabs.map((tab) => ({ ...tab, active: false }))]);
+      setStaticTabsQt(2);
+    } else {
+      setTabs([...initialTabs, ...tabs.slice(2)]);
+      setStaticTabsQt(1);
+    }
+  }, [user.isLogged]);
 
   const setActiveTab = (tabName) => {
     const newTabs = tabs
       .map((tab) => ({ ...tab, active: tab.name === tabName }))
-      .filter((tab, index) => index < STATIC_TABS_QT || tab.active);
+      .filter((tab, index) => index < staticTabsQt || tab.active);
 
     setTabs(newTabs);
   };
@@ -40,7 +50,7 @@ export const Home = () => {
   const addTagTab = (tag) => {
     const oldTabs = tabs
       .map((oldTab) => ({ ...oldTab, active: false }))
-      .filter((_, index) => index < STATIC_TABS_QT);
+      .filter((_, index) => index < staticTabsQt);
 
     setTabs([
       ...oldTabs,
@@ -77,7 +87,11 @@ export const Home = () => {
                 </ul>
               </div>
 
-              {activeTab && <Tab tab={activeTab} />}
+              {tabs.map((tab) => (
+                <div key={tab.name}>
+                  {activeTab.name === tab.name && <Tab tab={tab} />}
+                </div>
+              ))}
 
             </div>
 
