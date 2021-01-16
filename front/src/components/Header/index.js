@@ -13,7 +13,10 @@ import {
 
 const HeaderLink = ({
   linkData: {
-    show, route, icon, text,
+    show,
+    route,
+    icon,
+    text,
   },
 }) => (
   show && (
@@ -57,7 +60,7 @@ export const Header = () => {
           },
           {
             show: user.isLogged,
-            route: PROFILE_F(user.id),
+            route: PROFILE_F(user.username),
             icon: '',
             text: user.username,
           },
