@@ -8,3 +8,5 @@ export * from './Pagination';
 export * from './FavoriteButton';
 export * from './FollowButton';
 export * from './CreateEditArticlePage';
+export * from './TabsToggle';
+export * from './Tab';

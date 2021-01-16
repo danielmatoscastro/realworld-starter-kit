@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useUser, useEffectIgnoringAbortError, useAbortOnUnmount } from 'hooks';
 import { getRequest, PROFILE_ROUTE_F, ARTICLES_ROUTE } from 'api';
-import { DefaultPage, FollowButton } from 'components';
-import { TabsToggle } from './TabsToggle';
-import { Tab } from './Tab';
+import {
+  DefaultPage,
+  FollowButton,
+  TabsToggle,
+  Tab,
+} from 'components';
 
 export const Profile = () => {
   const { slug } = useParams();

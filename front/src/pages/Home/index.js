@@ -1,67 +1,60 @@
-import React, { useReducer } from 'react';
+import React, { useState } from 'react';
 import {
   DefaultPage,
-  CardArticle,
-  Pagination,
+  TabsToggle,
+  Tab,
 } from 'components';
-import { useUser, useAbortOnUnmount, useEffectIgnoringAbortError } from 'hooks';
-import { getRequest, ARTICLES_ROUTE } from 'api';
-import { reducer, initialState } from 'pages/Home/reducer';
-import Tags from 'pages/Home/Tags';
-import Tab from 'pages/Home/Tab';
-import {
-  doFetchUserFeed,
-  doFetchGlobalFeed,
-  doLoading,
-  doShowGlobalFeed,
-  doShowTag,
-  doShowUserFeed,
-  doUpdateArticle,
-  doSetPage,
-  doFetchTag,
-} from './actionCreators';
+import { useUser } from 'hooks';
+import { ARTICLES_ROUTE } from 'api';
+import Tags from './Tags';
 
-const ARTICLES_PER_PAGE = 10;
+const STATIC_TABS_QT = 2;
 
 export const Home = () => {
   const { user } = useUser();
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const {
-    loading,
-    articles,
-    articlesCount,
-    currentTag,
-    activePage,
-    globalFeedActive,
-  } = state;
+  const [tabs, setTabs] = useState([
+    {
+      name: 'Your Feed',
+      active: true,
+      endpoint: ARTICLES_ROUTE,
+      searchParams: {
+        author: user.username,
+      },
+    },
+    {
+      name: 'GlobalFeed',
+      active: false,
+      endpoint: ARTICLES_ROUTE,
+      searchParams: {},
+    },
+  ]);
 
-  const abortController = useAbortOnUnmount();
+  const setActiveTab = (tabName) => {
+    const newTabs = tabs
+      .map((tab) => ({
+        ...tab,
+        active: tab.name === tabName,
+      }))
+      .filter((tab, index) => index < STATIC_TABS_QT || tab.active);
 
-  useEffectIgnoringAbortError(async () => {
-    let futureActionCreator = doShowGlobalFeed;
+    setTabs(newTabs);
+  };
 
-    const searchParams = {
-      limit: ARTICLES_PER_PAGE,
-      offset: (activePage - 1) * ARTICLES_PER_PAGE,
-    };
-    if (currentTag) {
-      searchParams.tag = currentTag;
-      futureActionCreator = doShowTag;
-    }
-    if (!globalFeedActive && !currentTag) {
-      searchParams.author = user.username;
-      futureActionCreator = doShowUserFeed;
-    }
+  const addTagTab = (tag) => {
+    const oldTabs = tabs
+      .map((oldTab) => ({ ...oldTab, active: false }))
+      .filter((_, index) => index < STATIC_TABS_QT);
 
-    dispatch(doLoading());
+    setTabs([...oldTabs,
+      {
+        name: tag,
+        active: true,
+        endpoint: ARTICLES_ROUTE,
+        searchParams: { tag },
+      }]);
+  };
 
-    const data = await getRequest(ARTICLES_ROUTE,
-      searchParams,
-      user.isLogged ? user.token : null,
-      abortController);
-
-    dispatch(futureActionCreator(data.articles, data.articlesCount, currentTag));
-  }, [globalFeedActive, activePage, currentTag]);
+  const activeTab = tabs.find((tab) => tab.active);
 
   return (
     <DefaultPage>
@@ -80,46 +73,15 @@ export const Home = () => {
             <div className="col-md-9">
               <div className="feed-toggle">
                 <ul className="nav nav-pills outline-active">
-                  <Tab
-                    text="Your Feed"
-                    show={user.isLogged}
-                    isActive={() => !currentTag && !globalFeedActive}
-                    onClick={() => dispatch(doFetchUserFeed())}
-                  />
-                  <Tab
-                    text="Global Feed"
-                    isActive={() => !currentTag && globalFeedActive}
-                    onClick={() => !globalFeedActive && dispatch(doFetchGlobalFeed())}
-                  />
-                  <Tab
-                    text={`# ${currentTag}`}
-                    show={!!currentTag}
-                    onClick={(e) => e.preventDefault()}
-                  />
+                  <TabsToggle tabs={tabs} setActiveTab={setActiveTab} />
                 </ul>
               </div>
 
-              {loading && <div style={{ marginTop: '1em' }}>Loading articles...</div>}
-
-              {articles.map(((article) => (
-                <CardArticle
-                  article={article}
-                  onClickFavorite={(articleUpdated) => dispatch(doUpdateArticle(articleUpdated))}
-                  key={article.slug}
-                />
-              )))}
-
-              {!loading && articles.length === 0 && <div style={{ marginTop: '1em' }}>No articles are here... yet.</div>}
-
-              <Pagination
-                pages={Math.ceil(articlesCount / ARTICLES_PER_PAGE)}
-                activePage={activePage}
-                onClick={(page) => dispatch(doSetPage(page))}
-              />
+              {activeTab && <Tab tab={activeTab} />}
 
             </div>
 
-            <Tags onClick={(tag) => dispatch(doFetchTag(tag))} />
+            <Tags onClick={addTagTab} />
           </div>
         </div>
 

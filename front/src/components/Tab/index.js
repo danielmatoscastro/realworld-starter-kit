@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useAbortOnUnmount, useEffectIgnoringAbortError } from 'hooks';
+import { useAbortOnUnmount, useEffectIgnoringAbortError, usePrevious } from 'hooks';
 import { getRequest } from 'api';
-import { CardArticle, Pagination } from 'components';
+import { CardArticle } from 'components/CardArticle';
+import { Pagination } from 'components/Pagination';
 
 const ARTICLES_PER_PAGE = 10;
 
@@ -11,23 +12,28 @@ export const Tab = ({ tab }) => {
   const [articlesCount, setArticlesCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [activePage, setActivePage] = useState(1);
+  const previousTabName = usePrevious(tab.name);
   const abortController = useAbortOnUnmount();
 
   useEffectIgnoringAbortError(async () => {
-    setLoading(true);
+    if (previousTabName !== tab.name && activePage !== 1) {
+      setActivePage(1);
+    } else {
+      setLoading(true);
 
-    const response = await getRequest(tab.endpoint,
-      {
-        ...tab.searchParams,
-        limit: ARTICLES_PER_PAGE,
-        offset: (activePage - 1) * ARTICLES_PER_PAGE,
-      },
-      null,
-      abortController);
+      const response = await getRequest(tab.endpoint,
+        {
+          ...tab.searchParams,
+          limit: ARTICLES_PER_PAGE,
+          offset: (activePage - 1) * ARTICLES_PER_PAGE,
+        },
+        null,
+        abortController);
 
-    setArticles(response.articles);
-    setArticlesCount(response.articlesCount);
-    setLoading(false);
+      setArticles(response.articles);
+      setArticlesCount(response.articlesCount);
+      setLoading(false);
+    }
   }, [tab, activePage]);
 
   const onClickFavorite = (updatedArticle) => articles.map((article) => {
@@ -68,6 +74,7 @@ export const Tab = ({ tab }) => {
 
 Tab.propTypes = {
   tab: PropTypes.shape({
+    name: PropTypes.string.isRequired,
     endpoint: PropTypes.string.isRequired,
     searchParams: PropTypes.shape().isRequired,
   }).isRequired,
