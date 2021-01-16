@@ -31,10 +31,7 @@ export const Home = () => {
 
   const setActiveTab = (tabName) => {
     const newTabs = tabs
-      .map((tab) => ({
-        ...tab,
-        active: tab.name === tabName,
-      }))
+      .map((tab) => ({ ...tab, active: tab.name === tabName }))
       .filter((tab, index) => index < STATIC_TABS_QT || tab.active);
 
     setTabs(newTabs);
@@ -45,7 +42,8 @@ export const Home = () => {
       .map((oldTab) => ({ ...oldTab, active: false }))
       .filter((_, index) => index < STATIC_TABS_QT);
 
-    setTabs([...oldTabs,
+    setTabs([
+      ...oldTabs,
       {
         name: tag,
         active: true,
@@ -60,12 +58,14 @@ export const Home = () => {
     <DefaultPage>
       <div className="home-page">
 
+        {!user.isLogged && (
         <div className="banner">
           <div className="container">
             <h1 className="logo-font">conduit</h1>
             <p>A place to share your knowledge.</p>
           </div>
         </div>
+        )}
 
         <div className="container page">
           <div className="row">
