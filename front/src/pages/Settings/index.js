@@ -10,6 +10,7 @@ export const Settings = () => {
   const history = useHistory();
   const [errors, setErrors] = useState(null);
   const [passwordWasSet, setPasswordWasSet] = useState(false);
+  const [loading, setLoading] = useState(false);
   const abortController = useAbortOnUnmount();
 
   if (!user.isLogged) {
@@ -29,6 +30,7 @@ export const Settings = () => {
         })
         .reduce((formData, el) => ({ ...formData, [el.name]: el.value }), {});
 
+      setLoading(true);
       const response = await putRequest(USER_ROUTE,
         { user: payload },
         user.token,
@@ -40,6 +42,8 @@ export const Settings = () => {
       } else {
         setErrors(response.errors);
       }
+
+      setLoading(false);
     } catch (err) {
       if (err.name !== 'AbortError') {
         throw err;
@@ -77,19 +81,19 @@ export const Settings = () => {
               <form onSubmit={onSubmitHandler}>
                 <fieldset>
                   <fieldset className="form-group">
-                    <input className="form-control" type="text" name="image" placeholder="URL of profile picture" defaultValue={user.image} />
+                    <input className="form-control" type="text" name="image" placeholder="URL of profile picture" defaultValue={user.image} disabled={loading} />
                   </fieldset>
                   <fieldset className="form-group">
-                    <input className="form-control form-control-lg" type="text" name="username" placeholder="Your Name" defaultValue={user.username} />
+                    <input className="form-control form-control-lg" type="text" name="username" placeholder="Your Name" defaultValue={user.username} disabled={loading} />
                   </fieldset>
                   <fieldset className="form-group">
-                    <textarea className="form-control form-control-lg" rows="8" name="bio" placeholder="Short bio about you" defaultValue={user.bio} />
+                    <textarea className="form-control form-control-lg" rows="8" name="bio" placeholder="Short bio about you" defaultValue={user.bio} disabled={loading} />
                   </fieldset>
                   <fieldset className="form-group">
-                    <input className="form-control form-control-lg" type="text" name="email" placeholder="Email" defaultValue={user.email} />
+                    <input className="form-control form-control-lg" type="text" name="email" placeholder="Email" defaultValue={user.email} disabled={loading} />
                   </fieldset>
                   <fieldset className="form-group">
-                    <input className="form-control form-control-lg" type="password" name="password" placeholder="Password" onChange={() => !passwordWasSet && setPasswordWasSet(true)} />
+                    <input className="form-control form-control-lg" type="password" name="password" placeholder="New Password" disabled={loading} onChange={() => !passwordWasSet && setPasswordWasSet(true)} />
                   </fieldset>
                   <button type="submit" className="btn btn-lg btn-primary pull-xs-right">
                     Update Settings
