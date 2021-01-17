@@ -6,11 +6,14 @@ import { HOME } from '../../routes';
 
 const Tags = ({ onClick }) => {
   const [tags, setTags] = useState([]);
+  const [loading, setLoading] = useState(true);
   const abortController = useAbortOnUnmount();
 
   useEffectIgnoringAbortError(async () => {
+    setLoading(true);
     const data = await getRequest(TAGS_ROUTE, null, null, abortController);
     setTags(data.tags);
+    setLoading(false);
   }, []);
 
   return (
@@ -19,7 +22,9 @@ const Tags = ({ onClick }) => {
         <p>Popular Tags</p>
 
         <div className="tag-list">
-          {tags.map((tag) => (
+          {loading && <div style={{ marginTop: '1em' }}>Loading tags...</div>}
+
+          {!loading && tags.map((tag) => (
             <a
               href={HOME}
               className="tag-pill tag-default"
