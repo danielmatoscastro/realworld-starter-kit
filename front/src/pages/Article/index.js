@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import {
   getRequest,
@@ -13,6 +13,8 @@ import { DefaultPage } from 'components/DefaultPage';
 import { useUser, useAbortOnUnmount, useEffectIgnoringAbortError } from 'hooks';
 import Comments from 'pages/Article/Comments';
 import ArticleMeta from 'pages/Article/ArticleMeta';
+import { CommentInput } from './CommentInput';
+import { LOGIN, REGISTER } from '../../routes';
 
 export const Article = () => {
   const { slug } = useParams();
@@ -115,20 +117,19 @@ export const Article = () => {
 
           <div className="row">
             <div className="col-xs-12 col-md-8 offset-md-2">
-              <form className="card comment-form" onSubmit={addComment}>
-                <div className="card-block">
-                  <textarea className="form-control" placeholder="Write a comment..." rows="3" name="comment" />
+              {user.isLogged && <CommentInput addComment={addComment} user={user} />}
+              {!user.isLogged && (
+                <div>
+                  <Link to={LOGIN}>Sign in</Link>
+                  {' '}
+                  or
+                  {' '}
+                  <Link to={REGISTER}>sign up</Link>
+                  {' '}
+                  to add comments on this article.
                 </div>
-                <div className="card-footer">
-                  <img src={user.image} className="comment-author-img" alt="user" />
-                  <button type="submit" className="btn btn-sm btn-primary">
-                    Post Comment
-                  </button>
-                </div>
-              </form>
-
+              )}
               <Comments comments={comments} deleteComment={deleteComment} />
-
             </div>
           </div>
         </div>
