@@ -48,12 +48,16 @@ export const Article = () => {
     try {
       e.preventDefault();
 
-      const response = await postRequest(COMMENTS_ROUTE_F(slug), {
-        comment: {
-          body: e.target.comment.value,
+      const response = await postRequest(COMMENTS_ROUTE_F(slug),
+        {
+          comment: {
+            body: e.target.comment.value,
+          },
         },
-      }, user.token, abortController);
+        user.token,
+        abortController);
 
+      e.target.comment.value = '';
       setComments([response.comment, ...comments]);
     } catch (err) {
       if (err.name !== 'AbortError') {
@@ -74,7 +78,16 @@ export const Article = () => {
     }
   };
 
-  const { author } = article;
+  const onClickFollow = () => setArticle({
+    ...article,
+    author: {
+      ...article.author,
+      following: !article.author.following,
+    },
+  });
+
+  const onClickFavorite = (updatedArticle) => setArticle(updatedArticle);
+
   return (
     <DefaultPage>
       <div className="article-page">
@@ -84,11 +97,8 @@ export const Article = () => {
             <h1>{article.title}</h1>
             <ArticleMeta
               article={article}
-              onClickFollow={() => setArticle({
-                ...article,
-                author: { ...author, following: !author.following },
-              })}
-              onClickFavorite={(updatedArticle) => setArticle(updatedArticle)}
+              onClickFollow={onClickFollow}
+              onClickFavorite={onClickFavorite}
             />
           </div>
         </div>
@@ -107,11 +117,8 @@ export const Article = () => {
           <div className="article-actions">
             <ArticleMeta
               article={article}
-              onClickFollow={() => setArticle({
-                ...article,
-                author: { ...author, following: !author.following },
-              })}
-              onClickFavorite={(updatedArticle) => setArticle(updatedArticle)}
+              onClickFollow={onClickFollow}
+              onClickFavorite={onClickFavorite}
             />
           </div>
 
