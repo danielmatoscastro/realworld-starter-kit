@@ -1,10 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DefaultPage } from 'components/DefaultPage';
+import { ErrorList } from 'components/ErrorList';
 
 const SPACE_KEY_CODE = 32;
 
-export const CreateEditArticlePage = ({ onClickHandler, article, setArticle }) => {
+export const CreateEditArticlePage = ({
+  onClickHandler,
+  article,
+  setArticle,
+  errors,
+}) => {
   const onKeyUpTagList = (e) => {
     if (e.keyCode === SPACE_KEY_CODE) {
       const newTag = e.target.value.trim();
@@ -36,6 +42,17 @@ export const CreateEditArticlePage = ({ onClickHandler, article, setArticle }) =
           <div className="row">
 
             <div className="col-md-10 offset-md-1 col-xs-12">
+              { errors && (
+              <ErrorList
+                errors={errors}
+                possibleErrorFields={[
+                  'title',
+                  'description',
+                  'body',
+                ]}
+              />
+              )}
+
               <form>
                 <fieldset>
                   <fieldset className="form-group">
@@ -79,6 +96,10 @@ export const CreateEditArticlePage = ({ onClickHandler, article, setArticle }) =
   );
 };
 
+CreateEditArticlePage.defaultProps = {
+  errors: null,
+};
+
 CreateEditArticlePage.propTypes = {
   onClickHandler: PropTypes.func.isRequired,
   article: PropTypes.shape({
@@ -88,6 +109,7 @@ CreateEditArticlePage.propTypes = {
     tagList: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   setArticle: PropTypes.func.isRequired,
+  errors: PropTypes.shape(),
 };
 
 export default CreateEditArticlePage;

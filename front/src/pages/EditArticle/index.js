@@ -12,6 +12,7 @@ export const EditArticle = () => {
     body: '',
     tagList: [],
   });
+  const [errors, setErros] = useState(null);
   const history = useHistory();
   const { slug } = useParams();
   const { user } = useUser();
@@ -29,7 +30,11 @@ export const EditArticle = () => {
         user.token,
         abortController);
 
-      history.push(ARTICLE_F(response.article.slug));
+      if (response.article) {
+        history.push(ARTICLE_F(response.article.slug));
+      } else {
+        setErros(response.errors);
+      }
     } catch (err) {
       if (err.name !== 'AbortError') {
         throw err;
@@ -46,6 +51,7 @@ export const EditArticle = () => {
       onClickHandler={onClickHandler}
       article={article}
       setArticle={setArticle}
+      errors={errors}
     />
   );
 };
