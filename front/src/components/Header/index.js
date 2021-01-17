@@ -56,8 +56,7 @@ export const Header = () => {
               icon: '',
               text: 'Sign up',
             },
-          ].map((props) => <HeaderLink linkData={props} key={props.text} />)}
-
+          ].map((link) => <HeaderLink link={link} key={link.text} />)}
         </ul>
       </div>
     </nav>
