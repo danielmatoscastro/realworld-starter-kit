@@ -8,6 +8,7 @@ import {
   TabsToggle,
   Tab,
 } from 'components';
+import { EditProfileSettingsButton } from 'pages/Profile/EditProfileSettingsButton';
 
 export const Profile = () => {
   const { slug } = useParams();
@@ -57,6 +58,7 @@ export const Profile = () => {
 
   const activeTab = tabs.find((tab) => tab.active) ?? {};
 
+  const isOwner = user.username === profile.username;
   return (
     <DefaultPage>
       <div className="profile-page">
@@ -69,6 +71,8 @@ export const Profile = () => {
                 <p>
                   {profile.bio}
                 </p>
+                {isOwner && <EditProfileSettingsButton />}
+                {!isOwner && (
                 <FollowButton
                   username={profile.username}
                   following={profile.following}
@@ -77,6 +81,7 @@ export const Profile = () => {
                 >
                   {`${profile.following ? 'Unfollow' : 'Follow'} ${profile.username}`}
                 </FollowButton>
+                )}
               </div>
             </div>
           </div>
