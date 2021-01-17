@@ -7,9 +7,9 @@ export const Pagination = ({ pages, activePage, onClick }) => (
       {
             Array.from(Array(pages).keys()).map((_, pageMinusOne) => (
               // eslint-disable-next-line react/no-array-index-key
-              <li className="page-item" key={pageMinusOne}>
+              <li className={`page-item ${pageMinusOne + 1 === activePage ? 'active' : ''}`} key={pageMinusOne}>
                 <a
-                  className={`page-link ${pageMinusOne + 1 === activePage ? 'active' : ''}`}
+                  className="page-link"
                   href="/"
                   onClick={(e) => {
                     e.preventDefault();
