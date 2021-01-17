@@ -4,31 +4,31 @@ import { useUser } from 'hooks';
 import { ARTICLES_ROUTE, FEED_ROUTE } from 'api';
 import Tags from './Tags';
 
-const initialTabs = [
-  {
-    name: 'GlobalFeed',
-    active: true,
-    endpoint: ARTICLES_ROUTE,
-    searchParams: {},
-  },
-];
+const YOUR_FEED_TAB = {
+  name: 'Your Feed',
+  active: true,
+  endpoint: FEED_ROUTE,
+  searchParams: {},
+};
+
+const GLOBAL_FEED_TAB = {
+  name: 'GlobalFeed',
+  active: true,
+  endpoint: ARTICLES_ROUTE,
+  searchParams: {},
+};
 
 export const Home = () => {
   const { user } = useUser();
-  const [tabs, setTabs] = useState(initialTabs);
+  const [tabs, setTabs] = useState([GLOBAL_FEED_TAB]);
   const [staticTabsQt, setStaticTabsQt] = useState(1);
 
   useEffect(() => {
     if (user.isLogged) {
-      setTabs([{
-        name: 'Your Feed',
-        active: true,
-        endpoint: FEED_ROUTE,
-        searchParams: {},
-      }, ...tabs.map((tab) => ({ ...tab, active: false }))]);
+      setTabs([YOUR_FEED_TAB, ...tabs.map((tab) => ({ ...tab, active: false }))]);
       setStaticTabsQt(2);
     } else {
-      setTabs([...initialTabs, ...tabs.slice(2)]);
+      setTabs([GLOBAL_FEED_TAB, ...tabs.slice(2)]);
       setStaticTabsQt(1);
     }
   }, [user.isLogged]);
