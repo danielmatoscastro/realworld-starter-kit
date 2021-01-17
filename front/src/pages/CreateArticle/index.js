@@ -13,12 +13,14 @@ export const CreateArticle = () => {
     tagList: [],
   });
   const [errors, setErrors] = useState(null);
+  const [loading, setLoading] = useState(false);
   const history = useHistory();
   const { user } = useUser();
   const abortController = useAbortOnUnmount();
 
   const onClickHandler = async () => {
     try {
+      setLoading(true);
       const response = await postRequest(ARTICLES_ROUTE,
         { article },
         user.token,
@@ -29,6 +31,7 @@ export const CreateArticle = () => {
       } else {
         setErrors(response.errors);
       }
+      setLoading(false);
     } catch (err) {
       if (err.name !== 'AbortError') {
         throw err;
@@ -46,6 +49,7 @@ export const CreateArticle = () => {
       article={article}
       setArticle={setArticle}
       errors={errors}
+      loading={loading}
     />
   );
 };

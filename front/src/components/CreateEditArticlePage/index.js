@@ -10,6 +10,7 @@ export const CreateEditArticlePage = ({
   article,
   setArticle,
   errors,
+  loading,
 }) => {
   const onKeyUpTagList = (e) => {
     if (e.keyCode === SPACE_KEY_CODE) {
@@ -56,16 +57,16 @@ export const CreateEditArticlePage = ({
               <form>
                 <fieldset>
                   <fieldset className="form-group">
-                    <input type="text" name="title" className="form-control form-control-lg" placeholder="Article Title" value={article.title} onChange={onChangeHandler('title')} />
+                    <input type="text" name="title" className="form-control form-control-lg" placeholder="Article Title" value={article.title} onChange={onChangeHandler('title')} disabled={loading} />
                   </fieldset>
                   <fieldset className="form-group">
-                    <input type="text" name="description" className="form-control" placeholder="What's this article about?" value={article.description} onChange={onChangeHandler('description')} />
+                    <input type="text" name="description" className="form-control" placeholder="What's this article about?" value={article.description} onChange={onChangeHandler('description')} disabled={loading} />
                   </fieldset>
                   <fieldset className="form-group">
-                    <textarea name="body" className="form-control" rows="8" placeholder="Write your article (in markdown)" defaultValue={article.body} onChange={onChangeHandler('body')} />
+                    <textarea name="body" className="form-control" rows="8" placeholder="Write your article (in markdown)" defaultValue={article.body} onChange={onChangeHandler('body')} disabled={loading} />
                   </fieldset>
                   <fieldset className="form-group">
-                    <input type="text" name="tagList" className="form-control" placeholder="Enter tags" onKeyUp={onKeyUpTagList} />
+                    <input type="text" name="tagList" className="form-control" placeholder="Enter tags" onKeyUp={onKeyUpTagList} disabled={loading} />
                     <div className="tag-list">
                       {article.tagList.map((tag) => (
                         <span key={tag} className="tag-default tag-pill">
@@ -82,7 +83,7 @@ export const CreateEditArticlePage = ({
                       ))}
                     </div>
                   </fieldset>
-                  <button className="btn btn-lg pull-xs-right btn-primary" type="button" onClick={onClickHandler}>
+                  <button className="btn btn-lg pull-xs-right btn-primary" type="button" onClick={onClickHandler} disabled={loading}>
                     Publish Article
                   </button>
                 </fieldset>
@@ -110,6 +111,7 @@ CreateEditArticlePage.propTypes = {
   }).isRequired,
   setArticle: PropTypes.func.isRequired,
   errors: PropTypes.shape(),
+  loading: PropTypes.bool.isRequired,
 };
 
 export default CreateEditArticlePage;

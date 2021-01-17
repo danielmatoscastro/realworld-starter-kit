@@ -13,18 +13,22 @@ export const EditArticle = () => {
     tagList: [],
   });
   const [errors, setErros] = useState(null);
+  const [loading, setLoading] = useState(true);
   const history = useHistory();
   const { slug } = useParams();
   const { user } = useUser();
   const abortController = useAbortOnUnmount();
 
   useEffectIgnoringAbortError(async () => {
+    setLoading(true);
     const response = await getRequest(ARTICLES_ROUTE_F(slug), null, null, abortController);
     setArticle(response.article);
+    setLoading(false);
   }, []);
 
   const onClickHandler = async () => {
     try {
+      setLoading(true);
       const response = await putRequest(ARTICLES_ROUTE_F(slug),
         { article },
         user.token,
@@ -35,6 +39,8 @@ export const EditArticle = () => {
       } else {
         setErros(response.errors);
       }
+
+      setLoading(false);
     } catch (err) {
       if (err.name !== 'AbortError') {
         throw err;
@@ -52,6 +58,7 @@ export const EditArticle = () => {
       article={article}
       setArticle={setArticle}
       errors={errors}
+      loading={loading}
     />
   );
 };
