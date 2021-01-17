@@ -9,6 +9,7 @@ export const Settings = () => {
   const { user, setUser, clearUser } = useUser();
   const history = useHistory();
   const [errors, setErrors] = useState(null);
+  const [passwordWasSet, setPasswordWasSet] = useState(false);
   const abortController = useAbortOnUnmount();
 
   if (!user.isLogged) {
@@ -18,9 +19,14 @@ export const Settings = () => {
   const onSubmitHandler = async (e) => {
     try {
       e.preventDefault();
-
       const payload = Array.from(e.target.elements)
-        .filter((el) => el.name && el.value !== '')
+        .filter((el) => {
+          if (el.name && el.name === 'password') {
+            return passwordWasSet;
+          }
+
+          return el.name;
+        })
         .reduce((formData, el) => ({ ...formData, [el.name]: el.value }), {});
 
       const response = await putRequest(USER_ROUTE,
@@ -83,7 +89,7 @@ export const Settings = () => {
                     <input className="form-control form-control-lg" type="text" name="email" placeholder="Email" defaultValue={user.email} />
                   </fieldset>
                   <fieldset className="form-group">
-                    <input className="form-control form-control-lg" type="password" name="password" placeholder="Password" />
+                    <input className="form-control form-control-lg" type="password" name="password" placeholder="Password" onChange={() => !passwordWasSet && setPasswordWasSet(true)} />
                   </fieldset>
                   <button type="submit" className="btn btn-lg btn-primary pull-xs-right">
                     Update Settings
