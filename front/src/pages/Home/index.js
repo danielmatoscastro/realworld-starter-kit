@@ -12,7 +12,7 @@ const YOUR_FEED_TAB = {
 };
 
 const GLOBAL_FEED_TAB = {
-  name: 'GlobalFeed',
+  name: 'Global Feed',
   active: true,
   endpoint: ARTICLES_ROUTE,
   searchParams: {},
@@ -49,7 +49,7 @@ export const Home = () => {
     setTabs([
       ...oldTabs,
       {
-        name: tag,
+        name: `# ${tag}`,
         active: true,
         endpoint: ARTICLES_ROUTE,
         searchParams: { tag },
