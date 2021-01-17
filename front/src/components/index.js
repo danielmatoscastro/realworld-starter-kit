@@ -10,3 +10,4 @@ export * from './FollowButton';
 export * from './CreateEditArticlePage';
 export * from './TabsToggle';
 export * from './Tab';
+export * from './TagList';

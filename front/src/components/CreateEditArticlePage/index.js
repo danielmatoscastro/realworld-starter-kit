@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { DefaultPage } from 'components/DefaultPage';
 import { ErrorList } from 'components/ErrorList';
+import { TagList } from 'components/TagList';
 
 const SPACE_KEY_CODE = 32;
 
@@ -68,19 +69,11 @@ export const CreateEditArticlePage = ({
                   <fieldset className="form-group">
                     <input type="text" name="tagList" className="form-control" placeholder="Enter tags" onKeyUp={onKeyUpTagList} disabled={loading} />
                     <div className="tag-list">
-                      {article.tagList.map((tag) => (
-                        <span key={tag} className="tag-default tag-pill">
-                          <i
-                            className="ion-close-round"
-                            onClick={deleteTag(tag)}
-                            onKeyUp={deleteTag(tag)}
-                            role="button"
-                            tabIndex="0"
-                            aria-label="delete tag"
-                          />
-                          {tag}
-                        </span>
-                      ))}
+                      <TagList
+                        tagList={article.tagList}
+                        showDeleteButton
+                        deleteHandler={deleteTag}
+                      />
                     </div>
                   </fieldset>
                   <button className="btn btn-lg pull-xs-right btn-primary" type="button" onClick={onClickHandler} disabled={loading}>

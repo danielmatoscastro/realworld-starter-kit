@@ -9,7 +9,7 @@ import {
   COMMENTS_ROUTE_F,
   COMMENTS_DELETE_ROUTE_F,
 } from 'api';
-import { DefaultPage } from 'components/DefaultPage';
+import { DefaultPage, TagList } from 'components';
 import { useUser, useAbortOnUnmount, useEffectIgnoringAbortError } from 'hooks';
 import Comments from 'pages/Article/Comments';
 import ArticleMeta from 'pages/Article/ArticleMeta';
@@ -25,6 +25,7 @@ export const Article = () => {
     slug: '',
     favorited: false,
     favoritesCount: 0,
+    tagList: [],
     author: {
       username: '',
       following: false,
@@ -111,6 +112,8 @@ export const Article = () => {
               </ReactMarkdown>
             </div>
           </div>
+
+          <TagList tagList={article.tagList} outline />
 
           <hr />
 
