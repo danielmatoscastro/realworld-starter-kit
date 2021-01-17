@@ -34,13 +34,19 @@ export const Article = () => {
   const [comments, setComments] = useState([]);
 
   useEffectIgnoringAbortError(async () => {
-    const response = await getRequest(ARTICLES_ROUTE_F(slug), null, null, abortController);
+    const response = await getRequest(ARTICLES_ROUTE_F(slug),
+      null,
+      user.isLogged ? user.token : null,
+      abortController);
 
     setArticle(response.article);
   }, [slug]);
 
   useEffectIgnoringAbortError(async () => {
-    const response = await getRequest(COMMENTS_ROUTE_F(slug), null, null, abortController);
+    const response = await getRequest(COMMENTS_ROUTE_F(slug),
+      user.isLogged ? user.token : null,
+      null,
+      abortController);
 
     setComments(response.comments);
   }, [slug]);
