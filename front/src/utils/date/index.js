@@ -1,5 +1,12 @@
-import { format } from 'date-fns';
+export const formatDate = (date) => {
+  const dateNew = new Date(date);
+  const options = {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  };
 
-export const formatDate = (date) => format(new Date(date ?? new Date()), 'MMMM d, y');
+  return new Intl.DateTimeFormat('en-US', options).format(dateNew);
+};
 
 export default formatDate;
