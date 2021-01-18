@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { DefaultPage, ErrorList, Input } from 'components';
+import { DefaultPage } from 'components/DefaultPage';
+import { ErrorList } from 'components/ErrorList';
+import { Input } from 'components/Input';
 import { postRequest } from 'api';
 import { useUser, useAbortOnUnmount } from 'hooks';
 import { HOME } from '../../routes';
 
-const LoginRegisterInternal = ({ data }) => {
+export const LoginRegisterInternal = ({ data }) => {
   const {
     title,
     link,

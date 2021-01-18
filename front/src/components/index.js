@@ -11,3 +11,4 @@ export * from './CreateEditArticlePage';
 export * from './TabsToggle';
 export * from './Tab';
 export * from './TagList';
+export * from './LoginRegisterInternal';
