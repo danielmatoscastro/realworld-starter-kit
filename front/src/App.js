@@ -16,8 +16,8 @@ import {
 import { UserProvider } from './providers';
 
 const Home = React.lazy(() => import('pages/Home'));
-const Login = React.lazy(() => import('pages/LoginRegister'));
-const Register = React.lazy(() => import('pages/LoginRegister'));
+const Login = React.lazy(() => import('pages/Login'));
+const Register = React.lazy(() => import('pages/Register'));
 const Settings = React.lazy(() => import('pages/Settings'));
 const CreateArticle = React.lazy(() => import('pages/CreateArticle'));
 const EditArticle = React.lazy(() => import('pages/EditArticle'));
