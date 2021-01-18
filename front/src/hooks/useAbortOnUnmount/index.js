@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+
+const abortControllerFactory = () => new AbortController();
 
 export const useAbortOnUnmount = () => {
-  const abortController = new AbortController();
+  const abortController = useMemo(abortControllerFactory, [abortControllerFactory]);
 
-  useEffect(() => () => abortController.abort(), []);
+  useEffect(() => () => abortController.abort(), [abortController]);
 
   return abortController;
 };

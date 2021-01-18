@@ -25,10 +25,10 @@ export const Home = () => {
 
   useEffect(() => {
     if (user.isLogged) {
-      setTabs([YOUR_FEED_TAB, ...tabs.map((tab) => ({ ...tab, active: false }))]);
+      setTabs((t) => [YOUR_FEED_TAB, ...t.map((tab) => ({ ...tab, active: false }))]);
       setStaticTabsQt(2);
     } else {
-      setTabs([GLOBAL_FEED_TAB, ...tabs.slice(2)]);
+      setTabs((t) => [GLOBAL_FEED_TAB, ...t.slice(2)]);
       setStaticTabsQt(1);
     }
   }, [user.isLogged]);
