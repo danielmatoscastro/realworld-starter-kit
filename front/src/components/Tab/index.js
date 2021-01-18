@@ -67,7 +67,7 @@ export const Tab = ({ tab }) => {
 
       {loading && <div style={{ marginTop: '1em' }}>Loading articles...</div>}
 
-      {hasArticles && (
+      {hasArticles && articlesCount > ARTICLES_PER_PAGE && (
       <Pagination
         pages={Math.ceil(articlesCount / ARTICLES_PER_PAGE)}
         activePage={activePage}
