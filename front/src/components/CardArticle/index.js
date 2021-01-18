@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { formatDate } from 'utils';
 import { PROFILE_F, ARTICLE_F } from '../../routes';
 import { FavoriteButton } from '../FavoriteButton';
 
@@ -22,7 +23,7 @@ export const CardArticle = ({ article, onClickFavorite }) => {
         <a href={PROFILE_F(username)}><img src={image} alt="profile" /></a>
         <div className="info">
           <a href={PROFILE_F(username)} className="author">{username}</a>
-          <span className="date">{createdAt}</span>
+          <span className="date">{formatDate(createdAt)}</span>
         </div>
         <FavoriteButton
           favorited={favorited}
