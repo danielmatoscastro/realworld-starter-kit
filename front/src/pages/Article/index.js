@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
 import {
   getRequest,
   postRequest,
@@ -14,6 +13,7 @@ import { useUser, useAbortOnUnmount, useEffectIgnoringAbortError } from 'hooks';
 import Comments from 'pages/Article/Comments';
 import ArticleMeta from 'pages/Article/ArticleMeta';
 import { CommentInput } from './CommentInput';
+import { ArticleBody } from './ArticleBody';
 import { LOGIN, REGISTER } from '../../routes';
 
 export const Article = () => {
@@ -51,7 +51,7 @@ export const Article = () => {
     setComments(response.comments);
   }, [slug]);
 
-  const addComment = async (e) => {
+  const addComment = useCallback(async (e) => {
     try {
       e.preventDefault();
 
@@ -71,9 +71,9 @@ export const Article = () => {
         throw err;
       }
     }
-  };
+  }, [abortController, comments, slug, user.token]);
 
-  const deleteComment = (id) => async () => {
+  const deleteComment = useCallback((id) => async () => {
     try {
       await deleteRequest(COMMENTS_DELETE_ROUTE_F(slug, id), user.token, abortController);
 
@@ -83,17 +83,17 @@ export const Article = () => {
         throw err;
       }
     }
-  };
+  }, [abortController, comments, slug, user.token]);
 
-  const onClickFollow = () => setArticle({
+  const onClickFollow = useCallback(() => setArticle({
     ...article,
     author: {
       ...article.author,
       following: !article.author.following,
     },
-  });
+  }), [article]);
 
-  const onClickFavorite = (updatedArticle) => setArticle(updatedArticle);
+  const onClickFavorite = useCallback((updatedArticle) => setArticle(updatedArticle), []);
 
   return (
     <DefaultPage>
@@ -113,9 +113,7 @@ export const Article = () => {
         <div className="container page">
           <div className="row article-content">
             <div className="col-md-12">
-              <ReactMarkdown>
-                {article.body}
-              </ReactMarkdown>
+              <ArticleBody articleBody={article.body} />
             </div>
           </div>
 
