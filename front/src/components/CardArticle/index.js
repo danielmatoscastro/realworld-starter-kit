@@ -20,7 +20,7 @@ export const CardArticle = ({ article, onClickFavorite }) => {
   return (
     <div className="article-preview">
       <div className="article-meta">
-        <a href={PROFILE_F(username)}><img src={image} alt="profile" /></a>
+        <a href={PROFILE_F(username)}><img src={image} width="128px" height="128px" alt="profile" /></a>
         <div className="info">
           <a href={PROFILE_F(username)} className="author">{username}</a>
           <span className="date">{formatDate(createdAt)}</span>

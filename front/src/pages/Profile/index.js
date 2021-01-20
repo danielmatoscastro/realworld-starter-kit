@@ -66,7 +66,7 @@ export const Profile = () => {
           <div className="container">
             <div className="row">
               <div className="col-xs-12 col-md-10 offset-md-1">
-                <img src={profile.image} className="user-img" alt="user" />
+                <img src={profile.image} className="user-img" alt="user" width="128px" height="128px" />
                 <h4>{profile.username}</h4>
                 <p>
                   {profile.bio}

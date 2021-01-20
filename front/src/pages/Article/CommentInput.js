@@ -7,7 +7,7 @@ export const CommentInput = ({ addComment, user }) => (
       <textarea className="form-control" placeholder="Write a comment..." rows="3" name="comment" />
     </div>
     <div className="card-footer">
-      <img src={user.image} className="comment-author-img" alt="user" />
+      <img src={user.image} className="comment-author-img" alt="user" width="128px" height="128px" />
       <button type="submit" className="btn btn-sm btn-primary">
         Post Comment
       </button>

@@ -15,7 +15,7 @@ const ArticleMeta = ({ article, onClickFollow, onClickFavorite }) => {
 
   return (
     <div className="article-meta">
-      <Link to={PROFILE_F(author.username)}><img src={author.image} alt="article author" /></Link>
+      <Link to={PROFILE_F(author.username)}><img src={author.image} alt="article author" width="128px" height="128px" /></Link>
       <div className="info">
         <Link to={PROFILE_F(author.username)} className="author">{author.username}</Link>
         <span className="date">{formatDate(article.createdAt)}</span>

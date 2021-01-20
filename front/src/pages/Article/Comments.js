@@ -16,7 +16,7 @@ const Comments = ({ comments, deleteComment }) => {
         </div>
         <div className="card-footer">
           <Link to={PROFILE_F(comment.author.username)} className="comment-author">
-            <img src={comment.author.image} className="comment-author-img" alt="comment author" />
+            <img src={comment.author.image} className="comment-author-img" alt="comment author" width="128px" height="128px" />
           </Link>
 &nbsp;
           <Link to={PROFILE_F(comment.author.username)} className="comment-author">{comment.author.username}</Link>
