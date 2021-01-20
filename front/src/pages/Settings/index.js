@@ -81,19 +81,59 @@ export const Settings = () => {
               <form onSubmit={onSubmitHandler}>
                 <fieldset>
                   <fieldset className="form-group">
-                    <input className="form-control" type="text" name="image" placeholder="URL of profile picture" defaultValue={user.image} disabled={loading} />
+                    <input
+                      className="form-control"
+                      type="text"
+                      name="image"
+                      placeholder="URL of profile picture"
+                      defaultValue={user.image}
+                      disabled={loading}
+                      aria-label="URL of profile picture"
+                    />
                   </fieldset>
                   <fieldset className="form-group">
-                    <input className="form-control form-control-lg" type="text" name="username" placeholder="Your Name" defaultValue={user.username} disabled={loading} />
+                    <input
+                      className="form-control form-control-lg"
+                      type="text"
+                      name="username"
+                      placeholder="Your Name"
+                      defaultValue={user.username}
+                      disabled={loading}
+                      aria-label="Your Name"
+                    />
                   </fieldset>
                   <fieldset className="form-group">
-                    <textarea className="form-control form-control-lg" rows="8" name="bio" placeholder="Short bio about you" defaultValue={user.bio} disabled={loading} />
+                    <textarea
+                      className="form-control form-control-lg"
+                      rows="8"
+                      name="bio"
+                      placeholder="Short bio about you"
+                      defaultValue={user.bio}
+                      disabled={loading}
+                      aria-label="Short bio about you"
+                    />
                   </fieldset>
                   <fieldset className="form-group">
-                    <input className="form-control form-control-lg" type="text" name="email" placeholder="Email" defaultValue={user.email} disabled={loading} />
+                    <input
+                      className="form-control form-control-lg"
+                      type="text"
+                      name="email"
+                      placeholder="Email"
+                      defaultValue={user.email}
+                      disabled={loading}
+                      aria-label="Email"
+                    />
                   </fieldset>
                   <fieldset className="form-group">
-                    <input className="form-control form-control-lg" type="password" name="password" placeholder="New Password" disabled={loading} onChange={() => !passwordWasSet && setPasswordWasSet(true)} />
+                    <input
+                      className="form-control form-control-lg"
+                      type="password"
+                      name="password"
+                      placeholder="New Password"
+                      disabled={loading}
+                      aria-label="New Password"
+                      onChange={() => !passwordWasSet && setPasswordWasSet(true)}
+                    />
                   </fieldset>
                   <button type="submit" className="btn btn-lg btn-primary pull-xs-right">
                     Update Settings

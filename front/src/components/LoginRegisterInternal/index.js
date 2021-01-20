@@ -74,18 +74,21 @@ export const LoginRegisterInternal = ({ data }) => {
                     placeholder="Your Name"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    ariaLabel="Your Name"
                   />
                 )}
                 <Input
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  ariaLabel="Email"
                 />
                 <Input
                   placeholder="Password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  ariaLabel="Password"
                 />
                 <button
                   type="button"

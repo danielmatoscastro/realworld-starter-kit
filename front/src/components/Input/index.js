@@ -2,7 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const Input = ({
-  placeholder, type, value, onChange,
+  placeholder,
+  type,
+  value,
+  onChange,
+  ariaLabel,
 }) => (
   <fieldset className="form-group">
     <input
@@ -11,6 +15,7 @@ export const Input = ({
       placeholder={placeholder}
       value={value}
       onChange={onChange}
+      aria-label={ariaLabel}
     />
   </fieldset>
 );
@@ -20,6 +25,7 @@ Input.propTypes = {
   type: PropTypes.string,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
+  ariaLabel: PropTypes.string.isRequired,
 };
 
 Input.defaultProps = {

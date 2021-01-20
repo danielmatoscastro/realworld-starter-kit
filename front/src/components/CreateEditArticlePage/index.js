@@ -58,16 +58,51 @@ export const CreateEditArticlePage = ({
               <form>
                 <fieldset>
                   <fieldset className="form-group">
-                    <input type="text" name="title" className="form-control form-control-lg" placeholder="Article Title" value={article.title} onChange={onChangeHandler('title')} disabled={loading} />
+                    <input
+                      type="text"
+                      name="title"
+                      className="form-control form-control-lg"
+                      placeholder="Article Title"
+                      value={article.title}
+                      onChange={onChangeHandler('title')}
+                      disabled={loading}
+                      aria-label="Article Title"
+                    />
                   </fieldset>
                   <fieldset className="form-group">
-                    <input type="text" name="description" className="form-control" placeholder="What's this article about?" value={article.description} onChange={onChangeHandler('description')} disabled={loading} />
+                    <input
+                      type="text"
+                      name="description"
+                      className="form-control"
+                      placeholder="What's this article about?"
+                      value={article.description}
+                      onChange={onChangeHandler('description')}
+                      disabled={loading}
+                      aria-label="What's this article about?"
+                    />
                   </fieldset>
                   <fieldset className="form-group">
-                    <textarea name="body" className="form-control" rows="8" placeholder="Write your article (in markdown)" defaultValue={article.body} onChange={onChangeHandler('body')} disabled={loading} />
+                    <textarea
+                      name="body"
+                      className="form-control"
+                      rows="8"
+                      placeholder="Write your article (in markdown)"
+                      defaultValue={article.body}
+                      onChange={onChangeHandler('body')}
+                      disabled={loading}
+                      aria-label="Write your article (in markdown)"
+                    />
                   </fieldset>
                   <fieldset className="form-group">
-                    <input type="text" name="tagList" className="form-control" placeholder="Enter tags" onKeyUp={onKeyUpTagList} disabled={loading} />
+                    <input
+                      type="text"
+                      name="tagList"
+                      className="form-control"
+                      placeholder="Enter tags"
+                      onKeyUp={onKeyUpTagList}
+                      disabled={loading}
+                      aria-label="Enter tags"
+                    />
                     <div className="tag-list">
                       <TagList
                         tagList={article.tagList}
